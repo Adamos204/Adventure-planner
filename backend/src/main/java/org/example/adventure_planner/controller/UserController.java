@@ -31,9 +31,9 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        User user = userService.getUserById(id).orElseThrow(() ->
+                new RuntimeException("User with ID " + id + " not found"));
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping

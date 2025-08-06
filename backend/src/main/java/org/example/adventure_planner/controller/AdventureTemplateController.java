@@ -1,6 +1,7 @@
 package  org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.AdventureTemplate;
+import org.example.adventure_planner.model.GearItem;
 import org.example.adventure_planner.service.AdventureTemplateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +32,9 @@ public class AdventureTemplateController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AdventureTemplate> getAdventureTemplateById(@PathVariable Long id){
-        return adventureTemplateService.getAdventureTemplateById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        AdventureTemplate adventureTemplate = adventureTemplateService.getAdventureTemplateById(id).orElseThrow(() ->
+                new RuntimeException("Adventure template with ID " + id + " not found"));
+        return ResponseEntity.ok(adventureTemplate);
     }
 
     @PutMapping

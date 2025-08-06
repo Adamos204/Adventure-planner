@@ -1,7 +1,6 @@
 package org.example.adventure_planner.controller;
 
 
-import org.example.adventure_planner.model.AdventureTemplate;
 import org.example.adventure_planner.model.UserAdventure;
 import org.example.adventure_planner.service.UserAdventureService;
 import org.springframework.http.HttpStatus;
@@ -33,9 +32,9 @@ public class UserAdventureController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserAdventure> getAdventureById(@PathVariable Long id){
-        return userAdventureService.getAdventureById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        UserAdventure userAdventure = userAdventureService.getAdventureById(id).orElseThrow(() ->
+                new RuntimeException("User adventure with ID " + id + " not found"));
+        return ResponseEntity.ok(userAdventure);
     }
 
     @PutMapping
