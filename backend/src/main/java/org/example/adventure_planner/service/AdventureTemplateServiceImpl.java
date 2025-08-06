@@ -10,56 +10,46 @@ import java.util.Optional;
 @Service
 public class AdventureTemplateServiceImpl implements AdventureTemplateService{
     private final AdventureTemplateRepository adventureTemplateRepository;
+    private final ValidationService validationService;
 
-    public AdventureTemplateServiceImpl(AdventureTemplateRepository adventureTemplateRepository){
+    public AdventureTemplateServiceImpl(AdventureTemplateRepository adventureTemplateRepository, ValidationService validationService) {
         this.adventureTemplateRepository = adventureTemplateRepository;
-    }
-
-    private void requireId(Long id) {
-        if (id == null) throw new IllegalArgumentException("ID cannot be null");
-    }
-
-    private void requireTemplateExists(Long id) {
-        if (!adventureTemplateRepository.existsById(id)) {
-            throw new RuntimeException("Template with ID " + id + " not found");
-        }
-    }
-
-    private void requireTemplateNotNull(AdventureTemplate adventureTemplate) {
-        if (adventureTemplate == null) throw new IllegalArgumentException("Template cannot be null");
+        this.validationService = validationService;
     }
 
     @Override
-    public List<AdventureTemplate> getAllAdventureTemplates(){
+    public List<AdventureTemplate> getAllAdventureTemplates() {
         return adventureTemplateRepository.findAll();
     }
 
     @Override
-    public Optional<AdventureTemplate> getAdventureTemplateById(Long id){
-        requireId(id);
-        requireTemplateExists(id);
+    public Optional<AdventureTemplate> getAdventureTemplateById(Long id) {
+        validationService.requireId(id);
+        validationService.requireEntityExists(adventureTemplateRepository.existsById(id),
+                "Template with ID " + id + " not found");
         return adventureTemplateRepository.findById(id);
     }
 
     @Override
-    public AdventureTemplate addAdventureTemplate(AdventureTemplate adventureTemplate){
-        requireTemplateNotNull(adventureTemplate);
+    public AdventureTemplate addAdventureTemplate(AdventureTemplate adventureTemplate) {
+        validationService.requireNotNull(adventureTemplate, "Template cannot be null");
         return adventureTemplateRepository.save(adventureTemplate);
     }
 
     @Override
-    public AdventureTemplate updateAdventureTemplate(AdventureTemplate adventureTemplate){
-        requireTemplateNotNull(adventureTemplate);
-        requireId(adventureTemplate.getId());
-        requireTemplateExists(adventureTemplate.getId());
+    public AdventureTemplate updateAdventureTemplate(AdventureTemplate adventureTemplate) {
+        validationService.requireNotNull(adventureTemplate, "Template cannot be null");
+        validationService.requireId(adventureTemplate.getId());
+        validationService.requireEntityExists(adventureTemplateRepository.existsById(adventureTemplate.getId()),
+                "Template not found");
         return adventureTemplateRepository.save(adventureTemplate);
     }
 
     @Override
-    public void deleteAdventureTemplate(Long id){
-        requireId(id);
-        requireTemplateExists(id);
+    public void deleteAdventureTemplate(Long id) {
+        validationService.requireId(id);
+        validationService.requireEntityExists(adventureTemplateRepository.existsById(id),
+                "Template not found");
         adventureTemplateRepository.deleteById(id);
     }
-
 }

@@ -10,23 +10,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ValidationService validationService;
 
-    public UserServiceImpl(UserRepository userRepository){
+    public UserServiceImpl(UserRepository userRepository, ValidationService validationService){
         this.userRepository = userRepository;
-    }
-
-    private void requireId(Long id) {
-        if (id == null) throw new IllegalArgumentException("ID cannot be null");
-    }
-
-    private void requireUserExists(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User with ID " + id + " not found");
-        }
-    }
-
-    private void requireUserNotNull(User user) {
-        if (user == null) throw new IllegalArgumentException("User cannot be null");
+        this.validationService = validationService;
     }
 
     @Override
@@ -36,29 +24,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> getUserById(Long id){
-        requireId(id);
-        requireUserExists(id);
+        validationService.requireId(id);
+        validationService.requireEntityExists(userRepository.existsById(id),
+                "User not found");
         return userRepository.findById(id);
     }
 
     @Override
     public User addUser(User user){
-        requireUserNotNull(user);
+        validationService.requireNotNull(user, "User cannot be null");
         return userRepository.save(user);
     }
 
     @Override
     public User updateUser(User user){
-        requireUserNotNull(user);
-        requireId(user.getId());
-        requireUserExists(user.getId());
+        validationService.requireId(user.getId());
+        validationService.requireNotNull(user, "User cannot be null");
+        validationService.requireEntityExists(userRepository.existsById(user.getId()),
+                "User not found");
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(Long id){
-        requireId(id);
-        requireUserExists(id);
+        validationService.requireId(id);
+        validationService.requireEntityExists(userRepository.existsById(id),
+                "User not found");
         userRepository.deleteById(id);
     }
 }
