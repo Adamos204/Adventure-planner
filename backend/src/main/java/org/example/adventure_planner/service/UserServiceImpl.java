@@ -2,6 +2,7 @@ package org.example.adventure_planner.service;
 
 import org.example.adventure_planner.model.User;
 import org.example.adventure_planner.repository.UserRepository;
+import org.example.adventure_planner.validation.ValidationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

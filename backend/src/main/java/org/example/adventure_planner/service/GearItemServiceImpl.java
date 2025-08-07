@@ -3,6 +3,7 @@ package org.example.adventure_planner.service;
 import org.example.adventure_planner.model.GearItem;
 import org.example.adventure_planner.repository.GearItemRepository;
 import org.example.adventure_planner.repository.UserAdventureRepository;
+import org.example.adventure_planner.validation.ValidationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

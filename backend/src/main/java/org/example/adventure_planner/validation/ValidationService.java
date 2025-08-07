@@ -1,4 +1,4 @@
-package org.example.adventure_planner.service;
+package org.example.adventure_planner.validation;
 
 import org.springframework.stereotype.Service;
 
