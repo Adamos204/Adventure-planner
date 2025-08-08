@@ -39,8 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user){
-        validationService.requireId(user.getId());
         validationService.requireNotNull(user, "User cannot be null");
+        validationService.requireId(user.getId());
         validationService.requireEntityExists(userRepository.existsById(user.getId()),
                 "User not found");
         return userRepository.save(user);
