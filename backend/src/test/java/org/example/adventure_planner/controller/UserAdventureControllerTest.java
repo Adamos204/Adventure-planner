@@ -4,7 +4,6 @@ import org.example.adventure_planner.model.UserAdventure;
 import org.example.adventure_planner.service.UserAdventureService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,6 +17,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+
 @ExtendWith(MockitoExtension.class)
 class UserAdventureControllerTest {
 
@@ -30,14 +31,14 @@ class UserAdventureControllerTest {
     private UserAdventure sampleUserAdventure;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         sampleUserAdventure = new UserAdventure();
         sampleUserAdventure.setId(1L);
-        sampleUserAdventure.setName("testadventure");
+        sampleUserAdventure.setName("Sample Adventure");
     }
 
     @Test
-    void testGetAllUserAdventures(){
+    void testGetAllAdventures() {
         when(userAdventureService.getAllAdventures()).thenReturn(Arrays.asList(sampleUserAdventure));
 
         ResponseEntity<List<UserAdventure>> response = userAdventureController.getAllAdventures();
@@ -48,7 +49,7 @@ class UserAdventureControllerTest {
     }
 
     @Test
-    void testAddUser() {
+    void testAddAdventure() {
         when(userAdventureService.addAdventure(any(UserAdventure.class))).thenReturn(sampleUserAdventure);
 
         ResponseEntity<UserAdventure> response = userAdventureController.addAdventure(sampleUserAdventure);
@@ -59,7 +60,7 @@ class UserAdventureControllerTest {
     }
 
     @Test
-    void testGetUserAdventureById(){
+    void testGetAdventureById_Found() {
         when(userAdventureService.getAdventureById(1L)).thenReturn(Optional.of(sampleUserAdventure));
 
         ResponseEntity<UserAdventure> response = userAdventureController.getAdventureById(1L);
@@ -70,7 +71,19 @@ class UserAdventureControllerTest {
     }
 
     @Test
-    void testUpdateUser() {
+    void testGetAdventureById_NotFound() {
+        Long id = 1L;
+        when(userAdventureService.getAdventureById(id)).thenReturn(Optional.empty());
+
+        ResponseEntity<UserAdventure> response = userAdventureController.getAdventureById(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(userAdventureService, times(1)).getAdventureById(id);
+    }
+
+    @Test
+    void testUpdateAdventure() {
         when(userAdventureService.updateAdventure(any(UserAdventure.class))).thenReturn(sampleUserAdventure);
 
         ResponseEntity<UserAdventure> response = userAdventureController.updateAdventure(sampleUserAdventure);
@@ -81,7 +94,7 @@ class UserAdventureControllerTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void testDeleteAdventure() {
         doNothing().when(userAdventureService).deleteAdventure(1L);
 
         ResponseEntity<Void> response = userAdventureController.deleteAdventure(1L);
@@ -92,15 +105,13 @@ class UserAdventureControllerTest {
 
     @Test
     void testGetAllUsersAdventures() {
-        Long userId = 1L;
-        List<UserAdventure> adventures = Arrays.asList(sampleUserAdventure);
-
-        when(userAdventureService.getAllUsersAdventures(userId)).thenReturn(adventures);
+        Long userId = 42L;
+        when(userAdventureService.getAllUsersAdventures(userId)).thenReturn(Arrays.asList(sampleUserAdventure));
 
         ResponseEntity<List<UserAdventure>> response = userAdventureController.getAllUsersAdventures(userId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(adventures, response.getBody());
+        assertEquals(1, response.getBody().size());
         verify(userAdventureService, times(1)).getAllUsersAdventures(userId);
     }
 }

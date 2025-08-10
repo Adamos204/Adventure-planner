@@ -2,6 +2,7 @@ package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.GearItem;
 import org.example.adventure_planner.service.GearItemService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,20 +24,20 @@ public class GearItemController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GearItem> getGearItemById(@PathVariable Long id) {
-        GearItem gearItem = gearItemService.getGearItemById(id).orElseThrow(() ->
-                new RuntimeException("Gear item with ID " + id + " not found"));
-        return ResponseEntity.ok(gearItem);
+    public ResponseEntity<GearItem> getAdventureById(@PathVariable Long id){
+        return gearItemService.getGearItemById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
     public ResponseEntity<GearItem> addGearItem(@RequestBody GearItem gearItem) {
-        return ResponseEntity.ok(gearItemService.addGearItem(gearItem));
+        GearItem saveGearItem = gearItemService.addGearItem(gearItem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saveGearItem);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<GearItem> updateGearItem(@PathVariable Long id, @RequestBody GearItem gearItem) {
-        gearItem.setId(id);
+    @PutMapping
+    public ResponseEntity<GearItem> updateGearItem(@RequestBody GearItem gearItem) {
         return ResponseEntity.ok(gearItemService.updateGearItem(gearItem));
     }
 

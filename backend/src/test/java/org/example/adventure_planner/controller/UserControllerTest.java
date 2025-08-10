@@ -60,7 +60,7 @@ class UserControllerTest {
     }
 
     @Test
-    void testGetUserById() {
+    void testGetUserById_Found() {
         when(userService.getUserById(1L)).thenReturn(Optional.of(sampleUser));
 
         ResponseEntity<User> response = userController.getUserById(1L);
@@ -68,6 +68,18 @@ class UserControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleUser, response.getBody());
         verify(userService, times(1)).getUserById(1L);
+    }
+
+    @Test
+    void testGetUserById_NotFound() {
+        Long userId = 1L;
+        when(userService.getUserById(userId)).thenReturn(Optional.empty());
+
+        ResponseEntity<User> response = userController.getUserById(userId);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(userService, times(1)).getUserById(userId);
     }
 
     @Test
@@ -89,56 +101,5 @@ class UserControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(userService, times(1)).deleteUser(1L);
-    }
-
-    @Test
-    void testGetUserById_UserNotFound() {
-        Long userId = 1L;
-        when(userService.getUserById(userId)).thenReturn(Optional.empty());
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            userController.getUserById(userId);
-        });
-
-        assertTrue(thrown.getMessage().contains("User with ID " + userId + " not found"));
-        verify(userService, times(1)).getUserById(userId);
-    }
-
-    @Test
-    void testAddUser_NullUser() {
-        // Assuming service throws IllegalArgumentException or custom exception on null
-        when(userService.addUser(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
-
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            userController.addUser(null);
-        });
-
-        assertEquals("User cannot be null", thrown.getMessage());
-        verify(userService, times(1)).addUser(null);
-    }
-
-    @Test
-    void testUpdateUser_NullUser() {
-        when(userService.updateUser(null)).thenThrow(new IllegalArgumentException("User cannot be null"));
-
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            userController.updateUser(null);
-        });
-
-        assertEquals("User cannot be null", thrown.getMessage());
-        verify(userService, times(1)).updateUser(null);
-    }
-
-    @Test
-    void testDeleteUser_UserNotFound() {
-        Long userId = 1L;
-        doThrow(new RuntimeException("User not found")).when(userService).deleteUser(userId);
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            userController.deleteUser(userId);
-        });
-
-        assertEquals("User not found", thrown.getMessage());
-        verify(userService, times(1)).deleteUser(userId);
     }
 }

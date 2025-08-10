@@ -32,15 +32,14 @@ public class UserAdventureController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserAdventure> getAdventureById(@PathVariable Long id){
-        UserAdventure userAdventure = userAdventureService.getAdventureById(id).orElseThrow(() ->
-                new RuntimeException("User adventure with ID " + id + " not found"));
-        return ResponseEntity.ok(userAdventure);
+        return userAdventureService.getAdventureById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PutMapping
     public ResponseEntity<UserAdventure> updateAdventure(@RequestBody UserAdventure userAdventure) {
-        UserAdventure updated = userAdventureService.updateAdventure(userAdventure);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(userAdventureService.updateAdventure(userAdventure));
     }
 
     @DeleteMapping("/{id}")

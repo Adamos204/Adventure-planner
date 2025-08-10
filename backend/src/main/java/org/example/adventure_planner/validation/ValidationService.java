@@ -1,5 +1,6 @@
 package org.example.adventure_planner.validation;
 
+import org.example.adventure_planner.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,7 @@ public class ValidationService {
 
     public void requireEntityExists(boolean exists , String message){
         if(!exists){
-            throw new RuntimeException(message);
+            throw new ResourceNotFoundException(message);
         }
     }
 }

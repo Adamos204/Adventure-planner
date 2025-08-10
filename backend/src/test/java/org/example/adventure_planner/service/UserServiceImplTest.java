@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,10 +17,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.jupiter.api.extension.ExtendWith;
-
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
+
+    private static final String USER_NOT_FOUND_MSG = "User not found";
+    private static final String USER_CANNOT_BE_NULL_MSG = "User cannot be null";
 
     @Mock
     private UserRepository userRepository;
@@ -40,159 +42,146 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetAllUsers() {
+    void getAllUsers_returnsList() {
         when(userRepository.findAll()).thenReturn(Arrays.asList(sampleUser));
 
         List<User> users = userService.getAllUsers();
 
         assertEquals(1, users.size());
-        verify(userRepository, times(1)).findAll();
+        assertEquals(sampleUser, users.get(0));
+        verify(userRepository).findAll();
     }
 
     @Test
-    void testGetUserById() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(sampleUser));
+    void getUserById_existingId_returnsUser() {
+        Long id = 1L;
+        when(userRepository.existsById(id)).thenReturn(true);
+        when(userRepository.findById(id)).thenReturn(Optional.of(sampleUser));
 
-        Optional<User> result = userService.getUserById(1L);
+        Optional<User> result = userService.getUserById(id);
 
         assertTrue(result.isPresent());
         assertEquals(sampleUser, result.get());
-        verify(validationService, times(1)).requireId(1L);
-        verify(validationService, times(1)).requireEntityExists(true, "User not found");
-        verify(userRepository, times(1)).findById(1L);
+
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(true, USER_NOT_FOUND_MSG);
+        verify(userRepository).findById(id);
     }
 
     @Test
-    void testAddUser() {
-        when(userRepository.save(sampleUser)).thenReturn(sampleUser);
+    void getUserById_nonExistingId_throwsException() {
+        Long id = 1L;
+        when(userRepository.existsById(id)).thenReturn(false);
 
-        User saved = userService.addUser(sampleUser);
+        doThrow(new IllegalStateException(USER_NOT_FOUND_MSG))
+                .when(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
 
-        assertEquals(sampleUser, saved);
-        verify(validationService, times(1)).requireNotNull(sampleUser, "User cannot be null");
-        verify(userRepository, times(1)).save(sampleUser);
-    }
-
-    @Test
-    void testUpdateUser() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        when(userRepository.save(sampleUser)).thenReturn(sampleUser);
-
-        User updated = userService.updateUser(sampleUser);
-
-        assertEquals(sampleUser, updated);
-        verify(validationService, times(1)).requireId(1L);
-        verify(validationService, times(1)).requireNotNull(sampleUser, "User cannot be null");
-        verify(validationService, times(1)).requireEntityExists(true, "User not found");
-        verify(userRepository, times(1)).save(sampleUser);
-    }
-
-    @Test
-    void testDeleteUser() {
-        when(userRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(userRepository).deleteById(1L);
-
-        userService.deleteUser(1L);
-
-        verify(validationService, times(1)).requireId(1L);
-        verify(validationService, times(1)).requireEntityExists(true, "User not found");
-        verify(userRepository, times(1)).deleteById(1L);
-    }
-
-    @Test
-    void testGetUserById_UserNotFound() {
-        Long userId = 1L;
-
-        doNothing().when(validationService).requireId(userId);
-        when(userRepository.existsById(userId)).thenReturn(false);
-
-        // validationService.requireEntityExists throws exception if false, so we simulate it
-        doThrow(new RuntimeException("User not found"))
-                .when(validationService).requireEntityExists(false, "User not found");
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            userService.getUserById(userId);
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            userService.getUserById(id);
         });
 
-        assertEquals("User not found", thrown.getMessage());
+        assertEquals(USER_NOT_FOUND_MSG, exception.getMessage());
 
-        verify(validationService).requireId(userId);
-        verify(validationService).requireEntityExists(false, "User not found");
-        verify(userRepository, never()).findById(userId);
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
+        verify(userRepository, never()).findById(any());
     }
 
     @Test
-    void testAddUser_NullUser() {
-        doThrow(new IllegalArgumentException("User cannot be null"))
-                .when(validationService).requireNotNull(null, "User cannot be null");
+    void addUser_valid_returnsSavedUser() {
+        when(userRepository.save(sampleUser)).thenReturn(sampleUser);
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
+        User result = userService.addUser(sampleUser);
+
+        assertEquals(sampleUser, result);
+        verify(validationService).requireNotNull(sampleUser, USER_CANNOT_BE_NULL_MSG);
+        verify(userRepository).save(sampleUser);
+    }
+
+    @Test
+    void addUser_null_throwsException() {
+        doThrow(new IllegalArgumentException(USER_CANNOT_BE_NULL_MSG))
+                .when(validationService).requireNotNull(null, USER_CANNOT_BE_NULL_MSG);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.addUser(null);
         });
 
-        assertEquals("User cannot be null", thrown.getMessage());
-
-        verify(validationService).requireNotNull(null, "User cannot be null");
+        assertEquals(USER_CANNOT_BE_NULL_MSG, exception.getMessage());
+        verify(validationService).requireNotNull(null, USER_CANNOT_BE_NULL_MSG);
         verify(userRepository, never()).save(any());
     }
 
     @Test
-    void testUpdateUser_NullUser() {
-        doThrow(new IllegalArgumentException("User cannot be null"))
-                .when(validationService).requireNotNull(null, "User cannot be null");
+    void updateUser_valid_returnsUpdatedUser() {
+        Long id = sampleUser.getId();
+        when(userRepository.existsById(id)).thenReturn(true);
+        when(userRepository.save(sampleUser)).thenReturn(sampleUser);
 
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
-            userService.updateUser(null);
-        });
+        User result = userService.updateUser(sampleUser);
 
-        assertEquals("User cannot be null", thrown.getMessage());
+        assertEquals(sampleUser, result);
 
-        verify(validationService).requireNotNull(null, "User cannot be null");
-        verify(userRepository, never()).save(any());
+        verify(validationService).requireNotNull(sampleUser, USER_CANNOT_BE_NULL_MSG);
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(true, USER_NOT_FOUND_MSG);
+        verify(userRepository).save(sampleUser);
     }
 
     @Test
-    void testUpdateUser_UserNotFound() {
-        sampleUser.setId(1L);
+    void updateUser_userNotFound_throwsException() {
+        Long id = sampleUser.getId();
+        when(userRepository.existsById(id)).thenReturn(false);
 
-        doNothing().when(validationService).requireId(sampleUser.getId());
-        doNothing().when(validationService).requireNotNull(sampleUser, "User cannot be null");
-        when(userRepository.existsById(sampleUser.getId())).thenReturn(false);
+        doThrow(new IllegalStateException(USER_NOT_FOUND_MSG))
+                .when(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
 
-        doThrow(new RuntimeException("User not found"))
-                .when(validationService).requireEntityExists(false, "User not found");
-
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             userService.updateUser(sampleUser);
         });
 
-        assertEquals("User not found", thrown.getMessage());
+        assertEquals(USER_NOT_FOUND_MSG, exception.getMessage());
 
-        verify(validationService).requireId(sampleUser.getId());
-        verify(validationService).requireNotNull(sampleUser, "User cannot be null");
-        verify(validationService).requireEntityExists(false, "User not found");
+        verify(validationService).requireNotNull(sampleUser, USER_CANNOT_BE_NULL_MSG);
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
         verify(userRepository, never()).save(any());
     }
 
     @Test
-    void testDeleteUser_UserNotFound() {
-        Long userId = 1L;
+    void deleteUser_existingUser_doesNotThrow() {
+        Long id = 1L;
+        when(userRepository.existsById(id)).thenReturn(true);
 
-        doNothing().when(validationService).requireId(userId);
-        when(userRepository.existsById(userId)).thenReturn(false);
+        assertDoesNotThrow(() -> userService.deleteUser(id));
 
-        doThrow(new RuntimeException("User not found"))
-                .when(validationService).requireEntityExists(false, "User not found");
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(true, USER_NOT_FOUND_MSG);
+        verify(userRepository).deleteById(id);
+    }
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            userService.deleteUser(userId);
+    @Test
+    void deleteUser_userNotFound_throwsException() {
+        Long id = 1L;
+        when(userRepository.existsById(id)).thenReturn(false);
+
+        doThrow(new IllegalStateException(USER_NOT_FOUND_MSG))
+                .when(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            userService.deleteUser(id);
         });
 
-        assertEquals("User not found", thrown.getMessage());
+        assertEquals(USER_NOT_FOUND_MSG, exception.getMessage());
 
-        verify(validationService).requireId(userId);
-        verify(validationService).requireEntityExists(false, "User not found");
-        verify(userRepository, never()).deleteById(userId);
+        verify(validationService).requireId(id);
+        verify(userRepository).existsById(id);
+        verify(validationService).requireEntityExists(false, USER_NOT_FOUND_MSG);
+        verify(userRepository, never()).deleteById(any());
     }
 }
