@@ -36,8 +36,9 @@ public class GearItemController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saveGearItem);
     }
 
-    @PutMapping
-    public ResponseEntity<GearItem> updateGearItem(@RequestBody GearItem gearItem) {
+    @PutMapping("/{id}")
+    public ResponseEntity<GearItem> updateGearItem(@PathVariable Long id, @RequestBody GearItem gearItem) {
+        gearItem.setId(id);
         return ResponseEntity.ok(gearItemService.updateGearItem(gearItem));
     }
 

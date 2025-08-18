@@ -86,7 +86,7 @@ class TravelPlanControllerTest {
     void testUpdateTravelPlan() {
         when(travelPlanService.updateTravelPlan(any(TravelPlan.class))).thenReturn(sampleTravelPlan);
 
-        ResponseEntity<TravelPlan> response = travelPlanController.updateTravelPlan(sampleTravelPlan);
+        ResponseEntity<TravelPlan> response = travelPlanController.updateTravelPlan(sampleTravelPlan.getId(), sampleTravelPlan);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleTravelPlan, response.getBody());

@@ -86,7 +86,7 @@ class UserControllerTest {
     void testUpdateUser() {
         when(userService.updateUser(any(User.class))).thenReturn(sampleUser);
 
-        ResponseEntity<User> response = userController.updateUser(sampleUser);
+        ResponseEntity<User> response = userController.updateUser(sampleUser.getId(), sampleUser);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleUser, response.getBody());

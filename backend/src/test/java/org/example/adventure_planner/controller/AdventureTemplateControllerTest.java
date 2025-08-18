@@ -86,7 +86,7 @@ class AdventureTemplateControllerTest {
     void testUpdateAdventureTemplate() {
         when(adventureTemplateService.updateAdventureTemplate(any(AdventureTemplate.class))).thenReturn(sampleTemplate);
 
-        ResponseEntity<AdventureTemplate> response = adventureTemplateController.updateAdventureTemplate(sampleTemplate);
+        ResponseEntity<AdventureTemplate> response = adventureTemplateController.updateAdventureTemplate(sampleTemplate.getId(), sampleTemplate);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleTemplate, response.getBody());

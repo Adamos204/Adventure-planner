@@ -86,7 +86,7 @@ class GearItemControllerTest {
     void testUpdateGearItem() {
         when(gearItemService.updateGearItem(any(GearItem.class))).thenReturn(sampleGearItem);
 
-        ResponseEntity<GearItem> response = gearItemController.updateGearItem(sampleGearItem);
+        ResponseEntity<GearItem> response = gearItemController.updateGearItem(sampleGearItem.getId(),  sampleGearItem);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleGearItem, response.getBody());

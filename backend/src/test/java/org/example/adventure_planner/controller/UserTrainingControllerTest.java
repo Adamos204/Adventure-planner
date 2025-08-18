@@ -86,7 +86,7 @@ class UserTrainingControllerTest {
     void testUpdateTraining() {
         when(userTrainingService.updateTraining(any(UserTraining.class))).thenReturn(sampleUserTraining);
 
-        ResponseEntity<UserTraining> response = userTrainingController.updateTraining(sampleUserTraining);
+        ResponseEntity<UserTraining> response = userTrainingController.updateTraining(sampleUserTraining.getId(), sampleUserTraining);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleUserTraining, response.getBody());

@@ -37,8 +37,9 @@ public class UserAdventureController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PutMapping
-    public ResponseEntity<UserAdventure> updateAdventure(@RequestBody UserAdventure userAdventure) {
+    @PutMapping("/{id}")
+    public ResponseEntity<UserAdventure> updateAdventure(@PathVariable Long id, @RequestBody UserAdventure userAdventure) {
+        userAdventure.setId(id);
         return ResponseEntity.ok(userAdventureService.updateAdventure(userAdventure));
     }
 

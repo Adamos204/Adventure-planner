@@ -86,7 +86,7 @@ class UserAdventureControllerTest {
     void testUpdateAdventure() {
         when(userAdventureService.updateAdventure(any(UserAdventure.class))).thenReturn(sampleUserAdventure);
 
-        ResponseEntity<UserAdventure> response = userAdventureController.updateAdventure(sampleUserAdventure);
+        ResponseEntity<UserAdventure> response = userAdventureController.updateAdventure(sampleUserAdventure.getId(), sampleUserAdventure);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleUserAdventure, response.getBody());

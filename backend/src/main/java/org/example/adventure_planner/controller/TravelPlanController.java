@@ -36,8 +36,9 @@ public class TravelPlanController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @PutMapping
-    public ResponseEntity<TravelPlan> updateTravelPlan(@RequestBody TravelPlan travelPlan){
+    @PutMapping("/{id}")
+    public ResponseEntity<TravelPlan> updateTravelPlan(@PathVariable Long id, @RequestBody TravelPlan travelPlan){
+        travelPlan.setId(id);
         return ResponseEntity.ok(travelPlanService.updateTravelPlan(travelPlan));
     }
 

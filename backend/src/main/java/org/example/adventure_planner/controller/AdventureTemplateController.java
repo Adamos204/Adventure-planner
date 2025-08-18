@@ -35,8 +35,10 @@ public class AdventureTemplateController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-    @PutMapping
-    public ResponseEntity<AdventureTemplate> updateAdventureTemplate(@RequestBody AdventureTemplate adventureTemplate){
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AdventureTemplate> updateAdventureTemplate(@PathVariable Long id, @RequestBody AdventureTemplate adventureTemplate){
+        adventureTemplate.setId(id);
         return ResponseEntity.ok(adventureTemplateService.updateAdventureTemplate(adventureTemplate));
     }
 

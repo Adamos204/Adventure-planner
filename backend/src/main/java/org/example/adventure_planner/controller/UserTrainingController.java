@@ -36,8 +36,9 @@ public class UserTrainingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @PutMapping
-    public ResponseEntity<UserTraining> updateTraining(@RequestBody UserTraining userTraining) {
+    @PutMapping("/{id}")
+    public ResponseEntity<UserTraining> updateTraining(@PathVariable Long id, @RequestBody UserTraining userTraining) {
+        userTraining.setId(id);
         return ResponseEntity.ok(userTrainingService.updateTraining(userTraining));
     }
 
