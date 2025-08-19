@@ -1,15 +1,15 @@
 package org.example.adventure_planner.service;
 
-import org.example.adventure_planner.model.GearItem;
+import org.example.adventure_planner.dto.GearItemRequestDTO;
+import org.example.adventure_planner.dto.GearItemResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface GearItemService {
-    List<GearItem> getAllGearItems();
-    Optional<GearItem> getGearItemById(Long id);
-    GearItem addGearItem(GearItem gearItem);
-    GearItem updateGearItem(GearItem gearItem);
+    List<GearItemResponseDTO> getAllGearItems();
+    GearItemResponseDTO getGearItemById(Long id);
+    GearItemResponseDTO addGearItem(GearItemRequestDTO requestDto);
+    GearItemResponseDTO updateGearItem(Long id, GearItemRequestDTO requestDto);
     void deleteGearItem(Long id);
-    List<GearItem> getAllAdventureItems(Long adventureId);
+    List<GearItemResponseDTO> getAllAdventureItems(Long adventureId);
 }

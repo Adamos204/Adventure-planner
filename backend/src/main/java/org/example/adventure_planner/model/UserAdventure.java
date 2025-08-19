@@ -44,7 +44,7 @@ public class UserAdventure {
     @NotNull
     @PositiveOrZero
     @Column(name = "distance_km", nullable = false)
-    private int lengthInKm;
+    private Double lengthInKm;
 
     @NotBlank
     @Size(min = 10, max = 50)

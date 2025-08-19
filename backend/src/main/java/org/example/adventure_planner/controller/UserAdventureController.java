@@ -1,9 +1,8 @@
 package org.example.adventure_planner.controller;
 
-
-import org.example.adventure_planner.model.UserAdventure;
+import org.example.adventure_planner.dto.UserAdventureRequestDTO;
+import org.example.adventure_planner.dto.UserAdventureResponseDTO;
 import org.example.adventure_planner.service.UserAdventureService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,32 +14,29 @@ public class UserAdventureController {
 
     private final UserAdventureService userAdventureService;
 
-    public UserAdventureController(UserAdventureService userAdventureService){
+    public UserAdventureController(UserAdventureService userAdventureService) {
         this.userAdventureService = userAdventureService;
     }
 
     @GetMapping
-    public ResponseEntity<List<UserAdventure>> getAllAdventures(){
+    public ResponseEntity<List<UserAdventureResponseDTO>> getAllAdventures() {
         return ResponseEntity.ok(userAdventureService.getAllAdventures());
     }
 
-    @PostMapping
-    public ResponseEntity<UserAdventure> addAdventure(@RequestBody UserAdventure userAdventure) {
-        UserAdventure saved = userAdventureService.addAdventure(userAdventure);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserAdventureResponseDTO> getAdventure(@PathVariable Long id) {
+        return ResponseEntity.ok(userAdventureService.getAdventureById(id));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserAdventure> getAdventureById(@PathVariable Long id){
-        return userAdventureService.getAdventureById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PostMapping
+    public ResponseEntity<UserAdventureResponseDTO> addAdventure(@RequestBody UserAdventureRequestDTO dto) {
+        return ResponseEntity.ok(userAdventureService.addAdventure(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserAdventure> updateAdventure(@PathVariable Long id, @RequestBody UserAdventure userAdventure) {
-        userAdventure.setId(id);
-        return ResponseEntity.ok(userAdventureService.updateAdventure(userAdventure));
+    public ResponseEntity<UserAdventureResponseDTO> updateAdventure(@PathVariable Long id,
+                                                                    @RequestBody UserAdventureRequestDTO dto) {
+        return ResponseEntity.ok(userAdventureService.updateAdventure(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -50,7 +46,7 @@ public class UserAdventureController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserAdventure>> getAllUsersAdventures(@PathVariable Long userId) {
+    public ResponseEntity<List<UserAdventureResponseDTO>> getAllUsersAdventures(@PathVariable Long userId) {
         return ResponseEntity.ok(userAdventureService.getAllUsersAdventures(userId));
     }
 }

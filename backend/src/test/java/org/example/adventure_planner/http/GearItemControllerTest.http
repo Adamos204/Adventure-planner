@@ -1,0 +1,45 @@
+# Get all gear items
+GET http://localhost:8080/gear-items
+Accept: application/json
+
+###
+
+# Get gear item by ID
+GET http://localhost:8080/gear-items/2
+Accept: application/json
+
+###
+
+# Create a new gear item
+POST http://localhost:8080/gear-items
+Content-Type: application/json
+
+{
+  "name": "Jacket",
+  "quantity": 3,
+  "adventureId": 2
+}
+
+###
+
+# Update existing gear item
+PUT http://localhost:8080/gear-items/2
+Content-Type: application/json
+
+{
+  "name": "Trekking Poles",
+  "quantity": 4,
+  "adventureId": 2
+}
+
+###
+
+# Delete a gear item
+DELETE http://localhost:8080/gear-items/2
+Accept: */*
+
+###
+
+# Get all gear items for a specific adventure
+GET http://localhost:8080/gear-items/adventure/2
+Accept: application/json

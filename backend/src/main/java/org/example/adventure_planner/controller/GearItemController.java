@@ -1,6 +1,7 @@
 package org.example.adventure_planner.controller;
 
-import org.example.adventure_planner.model.GearItem;
+import org.example.adventure_planner.dto.GearItemRequestDTO;
+import org.example.adventure_planner.dto.GearItemResponseDTO;
 import org.example.adventure_planner.service.GearItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,27 +20,29 @@ public class GearItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GearItem>> getAllGearItems() {
-        return ResponseEntity.ok(gearItemService.getAllGearItems());
+    public ResponseEntity<List<GearItemResponseDTO>> getAllGearItems() {
+        List<GearItemResponseDTO> items = gearItemService.getAllGearItems();
+        return ResponseEntity.ok(items);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GearItem> getAdventureById(@PathVariable Long id){
-        return gearItemService.getGearItemById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<GearItemResponseDTO> getGearItemById(@PathVariable Long id) {
+        GearItemResponseDTO item = gearItemService.getGearItemById(id);
+        return ResponseEntity.ok(item);
     }
 
     @PostMapping
-    public ResponseEntity<GearItem> addGearItem(@RequestBody GearItem gearItem) {
-        GearItem saveGearItem = gearItemService.addGearItem(gearItem);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saveGearItem);
+    public ResponseEntity<GearItemResponseDTO> addGearItem(@RequestBody GearItemRequestDTO dto) {
+        GearItemResponseDTO saved = gearItemService.addGearItem(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GearItem> updateGearItem(@PathVariable Long id, @RequestBody GearItem gearItem) {
-        gearItem.setId(id);
-        return ResponseEntity.ok(gearItemService.updateGearItem(gearItem));
+    public ResponseEntity<GearItemResponseDTO> updateGearItem(
+            @PathVariable Long id,
+            @RequestBody GearItemRequestDTO dto) {
+        GearItemResponseDTO updated = gearItemService.updateGearItem(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
@@ -49,7 +52,8 @@ public class GearItemController {
     }
 
     @GetMapping("/adventure/{adventureId}")
-    public ResponseEntity<List<GearItem>> getAllAdventureItems(@PathVariable Long adventureId) {
-        return ResponseEntity.ok(gearItemService.getAllAdventureItems(adventureId));
+    public ResponseEntity<List<GearItemResponseDTO>> getAllAdventureItems(@PathVariable Long adventureId) {
+        List<GearItemResponseDTO> items = gearItemService.getAllAdventureItems(adventureId);
+        return ResponseEntity.ok(items);
     }
 }

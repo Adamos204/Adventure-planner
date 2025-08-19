@@ -1,69 +1,103 @@
 package org.example.adventure_planner.service;
 
+import org.example.adventure_planner.dto.GearItemRequestDTO;
+import org.example.adventure_planner.dto.GearItemResponseDTO;
+import org.example.adventure_planner.exception.ResourceNotFoundException;
 import org.example.adventure_planner.model.GearItem;
+import org.example.adventure_planner.model.UserAdventure;
 import org.example.adventure_planner.repository.GearItemRepository;
 import org.example.adventure_planner.repository.UserAdventureRepository;
 import org.example.adventure_planner.validation.ValidationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class GearItemServiceImpl implements GearItemService{
+public class GearItemServiceImpl implements GearItemService {
+
     private final GearItemRepository gearItemRepository;
-    private final ValidationService validationService;
     private final UserAdventureRepository userAdventureRepository;
+    private final ValidationService validationService;
 
     public GearItemServiceImpl(GearItemRepository gearItemRepository,
-                               ValidationService validationService,
-                               UserAdventureRepository userAdventureRepository){
+                               UserAdventureRepository userAdventureRepository,
+                               ValidationService validationService) {
         this.gearItemRepository = gearItemRepository;
-        this.validationService = validationService;
         this.userAdventureRepository = userAdventureRepository;
+        this.validationService = validationService;
+    }
+
+    private GearItemResponseDTO toResponseDto(GearItem item) {
+        GearItemResponseDTO dto = new GearItemResponseDTO();
+        dto.setId(item.getId());
+        dto.setName(item.getName());
+        dto.setQuantity(item.getQuantity());
+        dto.setAdventureId(item.getAdventure() != null ? item.getAdventure().getId() : null);
+        return dto;
+    }
+
+    private void mapRequestToEntity(GearItemRequestDTO dto, GearItem item) {
+        item.setName(dto.getName());
+        item.setQuantity(dto.getQuantity());
+
+        if (dto.getAdventureId() != null) {
+            UserAdventure adventure = new UserAdventure();
+            adventure.setId(dto.getAdventureId());
+            item.setAdventure(adventure);
+        }
     }
 
     @Override
-    public List<GearItem> getAllGearItems(){
-        return gearItemRepository.findAll();
+    public List<GearItemResponseDTO> getAllGearItems() {
+        return gearItemRepository.findAll()
+                .stream()
+                .map(this::toResponseDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<GearItem> getGearItemById(Long id){
+    public GearItemResponseDTO getGearItemById(Long id) {
         validationService.requireId(id);
-        validationService.requireEntityExists(gearItemRepository.existsById(id),
-                "Gear item with ID " + id + " not found");
-        return gearItemRepository.findById(id);
+        GearItem item = gearItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Gear item not found"));
+        return toResponseDto(item);
     }
 
     @Override
-    public GearItem addGearItem(GearItem gearItem){
-        validationService.requireNotNull(gearItem, "Gear item cannot be null");
-        return gearItemRepository.save(gearItem);
+    public GearItemResponseDTO addGearItem(GearItemRequestDTO dto) {
+        validationService.requireNotNull(dto, "Gear item cannot be null");
+        GearItem item = new GearItem();
+        mapRequestToEntity(dto, item);
+        GearItem saved = gearItemRepository.save(item);
+        return toResponseDto(saved);
     }
 
     @Override
-    public GearItem updateGearItem(GearItem gearItem){
-        validationService.requireNotNull(gearItem, "Gear item cannot be null");
-        validationService.requireId(gearItem.getId());
-        validationService.requireEntityExists(gearItemRepository.existsById(gearItem.getId()),
-                "Gear item not found");
-        return gearItemRepository.save(gearItem);
-    }
-
-    @Override
-    public void deleteGearItem(Long id){
+    public GearItemResponseDTO updateGearItem(Long id, GearItemRequestDTO dto) {
         validationService.requireId(id);
-        validationService.requireEntityExists(gearItemRepository.existsById(id),
-                "Gear item not found");
+        GearItem item = gearItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Gear item not found"));
+        mapRequestToEntity(dto, item);
+        GearItem saved = gearItemRepository.save(item);
+        return toResponseDto(saved);
+    }
+
+    @Override
+    public void deleteGearItem(Long id) {
+        validationService.requireId(id);
+        if (!gearItemRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Gear item not found");
+        }
         gearItemRepository.deleteById(id);
     }
 
     @Override
-    public List<GearItem> getAllAdventureItems(Long adventureId){
+    public List<GearItemResponseDTO> getAllAdventureItems(Long adventureId) {
         validationService.requireId(adventureId);
-        validationService.requireEntityExists(userAdventureRepository.existsById(adventureId),
-                "Adventure not found");
-        return gearItemRepository.findByAdventureId(adventureId);
+        return gearItemRepository.findByAdventure_Id(adventureId)
+                .stream()
+                .map(this::toResponseDto)
+                .collect(Collectors.toList());
     }
 }

@@ -1,0 +1,53 @@
+# Get all travel plans
+GET http://localhost:8080/travel-plan
+Accept: application/json
+
+###
+
+# Get travel plan by ID
+GET http://localhost:8080/travel-plan/1
+Accept: application/json
+
+###
+
+# Create a new travel plan
+POST http://localhost:8080/travel-plan
+Content-Type: application/json
+
+{
+  "type": "Bus",
+  "departureLocation": "Edinburgh",
+  "arrivalLocation": "Fort William",
+  "departureTime": "08:00:00",
+  "arrivalTime": "12:30:00",
+  "notes": "Bring snacks and water.",
+  "userAdventureId": 2
+}
+
+###
+
+# Update existing travel plan
+PUT http://localhost:8080/travel-plan/1
+Content-Type: application/json
+
+{
+  "type": "Train",
+  "departureLocation": "Fort William",
+  "arrivalLocation": "Isle of Skye",
+  "departureTime": "09:00:00",
+  "arrivalTime": "13:15:00",
+  "notes": "Check train schedule in advance.",
+  "userAdventureId": 2
+}
+
+###
+
+# Delete a travel plan
+DELETE http://localhost:8080/travel-plan/1
+Accept: */*
+
+###
+
+# Get all travel plans for a specific user adventure
+GET http://localhost:8080/travel-plan/adventure/2
+Accept: application/json

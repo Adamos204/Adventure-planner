@@ -1,16 +1,15 @@
 package org.example.adventure_planner.service;
 
-import org.example.adventure_planner.model.TravelPlan;
+import org.example.adventure_planner.dto.TravelPlanRequestDTO;
+import org.example.adventure_planner.dto.TravelPlanResponseDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TravelPlanService {
-    List<TravelPlan> getAllTravelPlans();
-    Optional<TravelPlan> getTravelPlanById(Long id);
-    TravelPlan addTravelPlan(TravelPlan travelPlan);
-    TravelPlan updateTravelPlan(TravelPlan travelPlan);
+    List<TravelPlanResponseDTO> getAllTravelPlans();
+    TravelPlanResponseDTO getTravelPlanById(Long id);
+    TravelPlanResponseDTO addTravelPlan(TravelPlanRequestDTO dto);
+    TravelPlanResponseDTO updateTravelPlan(Long id, TravelPlanRequestDTO dto);
     void deleteTravelPlan(Long id);
-    List<TravelPlan> getTravelPlansByUserAdventureId(Long userAdventureId);
+    List<TravelPlanResponseDTO> getTravelPlansByUserAdventureId(Long userAdventureId);
 }
-

@@ -1,0 +1,51 @@
+# Get all trainings
+GET http://localhost:8080/user-trainings
+Accept: application/json
+
+###
+
+# Get training by ID
+GET http://localhost:8080/user-trainings/1
+Accept: application/json
+
+###
+
+# Create a new training
+POST http://localhost:8080/user-trainings
+Content-Type: application/json
+
+{
+  "date": "2025-08-20",
+  "type": "Gym",
+  "durationInMin": 60,
+  "durationInKm": 5,
+  "notes": "Leg day workout",
+  "userId": 2
+}
+
+###
+
+# Update existing training
+PUT http://localhost:8080/user-trainings/1
+Content-Type: application/json
+
+{
+  "date": "2025-08-21",
+  "type": "Krav Maga",
+  "durationInMin": 90,
+  "durationInKm": 2,
+  "notes": "Sparring session",
+  "userId": 2
+}
+
+###
+
+# Delete a training
+DELETE http://localhost:8080/user-trainings/2
+Accept: */*
+
+###
+
+# Get all trainings for a specific user
+GET http://localhost:8080/user-trainings/user/2
+Accept: application/json

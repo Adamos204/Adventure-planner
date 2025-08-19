@@ -1,0 +1,59 @@
+# Get all adventures
+GET http://localhost:8080/user-adventure
+Accept: application/json
+
+###
+
+# Get adventure by ID
+GET http://localhost:8080/user-adventure/2
+Accept: application/json
+
+###
+
+# Create a new adventure
+POST http://localhost:8080/user-adventure
+Content-Type: application/json
+
+{
+  "name": "Mountain Hike",
+  "location": "Highlands",
+  "description": "A challenging 3-day hike in the Scottish Highlands",
+  "date": "2025-08-25",
+  "notes": "Pack extra water",
+  "lengthInDays": 3,
+  "lengthInKm": 25,
+  "startLocation": "Fort William",
+  "endLocation": "Ben Nevis Base",
+  "userId": 2
+}
+
+###
+
+# Update existing adventure
+PUT http://localhost:8080/user-adventure/2
+Content-Type: application/json
+
+{
+  "name": "Mountain Hike Updated",
+  "location": "Highlands",
+  "description": "Updated description with more details",
+  "date": "2025-08-26",
+  "notes": "Bring raincoat",
+  "lengthInDays": 4,
+  "lengthInKm": 28,
+  "startLocation": "Fort William",
+  "endLocation": "Ben Nevis Summit",
+  "userId": 2
+}
+
+###
+
+# Delete an adventure
+DELETE http://localhost:8080/user-adventure/2
+Accept: */*
+
+###
+
+# Get all adventures for a specific user
+GET http://localhost:8080/user-adventure/user/2
+Accept: application/json

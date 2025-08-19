@@ -1,0 +1,47 @@
+# Get all adventure templates
+GET http://localhost:8080/adventure-template
+Accept: application/json
+
+###
+
+# Get adventure template by ID
+GET http://localhost:8080/adventure-template/1
+Accept: application/json
+
+###
+
+# Create a new adventure template
+POST http://localhost:8080/adventure-template
+Content-Type: application/json
+
+{
+  "name": "Kilimanjaro Trek",
+  "location": "Tanzania",
+  "description": "A seven-day trek to the summit of Mount Kilimanjaro with breathtaking views and challenging trails.",
+  "lengthInDays": 7,
+  "lengthInKm": 62,
+  "startLocation": "Machame Gate, Kilimanjaro National Park",
+  "endLocation": "Uhuru Peak, Kilimanjaro"
+}
+
+###
+
+# Update existing adventure template
+PUT http://localhost:8080/adventure-template/1
+Content-Type: application/json
+
+{
+  "name": "Everest Base Camp Trek",
+  "location": "Nepal",
+  "description": "A twelve-day trek through the Himalayas leading to Everest Base Camp, suitable for experienced hikers.",
+  "lengthInDays": 12,
+  "lengthInKm": 130,
+  "startLocation": "Lukla, Nepal",
+  "endLocation": "Everest Base Camp"
+}
+
+###
+
+# Delete an adventure template
+DELETE http://localhost:8080/adventure-template/1
+Accept: */*

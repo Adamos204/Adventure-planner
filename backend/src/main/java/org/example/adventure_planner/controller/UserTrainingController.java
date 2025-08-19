@@ -1,6 +1,7 @@
 package org.example.adventure_planner.controller;
 
-import org.example.adventure_planner.model.UserTraining;
+import org.example.adventure_planner.dto.UserTrainingRequestDTO;
+import org.example.adventure_planner.dto.UserTrainingResponseDTO;
 import org.example.adventure_planner.service.UserTrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,27 +20,29 @@ public class UserTrainingController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserTraining>> getAllTrainings() {
-        return ResponseEntity.ok(userTrainingService.getAllTrainings());
+    public ResponseEntity<List<UserTrainingResponseDTO>> getAllTrainings() {
+        List<UserTrainingResponseDTO> trainings = userTrainingService.getAllTrainings();
+        return ResponseEntity.ok(trainings);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserTraining> getTrainingById(@PathVariable Long id){
-        return userTrainingService.getTrainingById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<UserTrainingResponseDTO> getTrainingById(@PathVariable Long id) {
+        UserTrainingResponseDTO training = userTrainingService.getTrainingById(id);
+        return ResponseEntity.ok(training);
     }
 
     @PostMapping
-    public ResponseEntity<UserTraining> addTraining(@RequestBody UserTraining userTraining) {
-        UserTraining saved = userTrainingService.addTraining(userTraining);
+    public ResponseEntity<UserTrainingResponseDTO> addTraining(@RequestBody UserTrainingRequestDTO dto) {
+        UserTrainingResponseDTO saved = userTrainingService.addTraining(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserTraining> updateTraining(@PathVariable Long id, @RequestBody UserTraining userTraining) {
-        userTraining.setId(id);
-        return ResponseEntity.ok(userTrainingService.updateTraining(userTraining));
+    public ResponseEntity<UserTrainingResponseDTO> updateTraining(
+            @PathVariable Long id,
+            @RequestBody UserTrainingRequestDTO dto) {
+        UserTrainingResponseDTO updated = userTrainingService.updateTraining(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
@@ -49,8 +52,8 @@ public class UserTrainingController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserTraining>> getAllUserTrainings(@PathVariable Long userId) {
-        return ResponseEntity.ok(userTrainingService.getAllUserTrainings(userId));
+    public ResponseEntity<List<UserTrainingResponseDTO>> getAllUserTrainings(@PathVariable Long userId) {
+        List<UserTrainingResponseDTO> trainings = userTrainingService.getAllUserTrainings(userId);
+        return ResponseEntity.ok(trainings);
     }
 }
-
