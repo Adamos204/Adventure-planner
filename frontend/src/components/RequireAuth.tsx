@@ -3,15 +3,15 @@ import { Navigate, Outlet, useLocation } from "react-router-dom"
 import type { UserDto } from "../dto/dto.tsx"
 
 export default function RequireAuth() {
-    const [user, setUser] = useState<UserDto | null | "loading">("loading")
-    const location = useLocation()
+    const [user, setUser] = useState<UserDto | null | "loading">("loading");
+    const location = useLocation();
 
     useEffect(() => {
         fetch("http://localhost:8080/auth/me", { credentials: "include" })
             .then(res => (res.ok ? res.json() : null))
             .then((u) => setUser(u))
             .catch(() => setUser(null))
-    }, [])
+    }, []);
 
     if (user === "loading") {
         return (

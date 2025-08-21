@@ -1,3 +1,5 @@
+import type {RegisterPayload} from "../types/RegisterPayload.ts";
+
 export async function   fetchMe() {
     const res = await fetch("http://localhost:8080/auth/me", {
         credentials: "include",
@@ -23,4 +25,15 @@ export async function logout() {
         method: "POST",
         credentials: "include",
     });
+}
+
+export async function createUser(payload: RegisterPayload) {
+    const res = await fetch("http://localhost:8080/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include",
+    })
+    if (!res.ok) throw new Error("Registration failed")
+    return res.json()
 }

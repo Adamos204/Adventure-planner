@@ -69,7 +69,7 @@ export default function About() {
             </section>
             <section className="bg-gray-50 border-t">
                 <div className="max-w-7xl mx-auto px-6 py-12">
-                    <h2 className="text-2xl font-semibold text-gray-900">The Team</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900">Designer</h2>
                     <p className="mt-2 text-gray-600">Built and maintained by a solo developer.</p>
 
                     <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3">

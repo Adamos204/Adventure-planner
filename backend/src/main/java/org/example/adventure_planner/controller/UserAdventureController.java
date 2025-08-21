@@ -4,6 +4,7 @@ import org.example.adventure_planner.dto.UserAdventureRequestDTO;
 import org.example.adventure_planner.dto.UserAdventureResponseDTO;
 import org.example.adventure_planner.service.UserAdventureService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserAdventureController {
     }
 
     @PostMapping
-    public ResponseEntity<UserAdventureResponseDTO> addAdventure(@RequestBody UserAdventureRequestDTO dto) {
+    public ResponseEntity<UserAdventureResponseDTO> addAdventure(@RequestBody UserAdventureRequestDTO dto, Authentication authentication) {
         return ResponseEntity.ok(userAdventureService.addAdventure(dto));
     }
 

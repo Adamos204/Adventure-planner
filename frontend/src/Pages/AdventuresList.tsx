@@ -1,17 +1,25 @@
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import {Link, useParams} from "react-router-dom"
+import { listAdventures } from "../components/AdventuresFecth.tsx";
+import type {Adventure} from "../types/AdventureTypes.ts";
 
-type Adventure = { id: string; date: string; name: string; status?: "Planned" | "Booked" | "Prep" }
-
-const adventures: Adventure[] = [
-    { id: "a1", date: "2025-09-10", name: "Ben Nevis", status: "Planned" },
-    { id: "a2", date: "2025-10-03", name: "Kilimanjaro Prep Hike", status: "Prep" },
-]
-
-const formatDate = (iso: string) =>
+const fmt = (iso: string) =>
     new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
 
 export default function AdventuresList() {
-    const items = [...adventures].sort((a, b) => +new Date(a.date) - +new Date(b.date))
+    const [items, setItems] = useState<Adventure[] | null>(null)
+    const [error, setError] = useState<string | null>(null)
+    const { id } = useParams()
+
+    useEffect(() => {
+        listAdventures(id)
+            .then((data) => {
+                const sorted = [...data].sort((a, b) => +new Date(a.date) - +new Date(b.date))
+                setItems(sorted)
+            })
+            .catch((e) => setError(e instanceof Error ? e.message : "Error"))
+    }, [id])
+
     return (
         <main className="min-h-[calc(100vh-4rem)] bg-white">
             <section className="border-b">
@@ -38,36 +46,39 @@ export default function AdventuresList() {
                             </Link>
                         </div>
 
-                        <ul className="divide-y">
-                            {items.length === 0 ? (
-                                <li className="px-6 py-6 text-gray-600">No adventures yet.</li>
-                            ) : (
-                                items.map((a) => (
-                                    <li key={a.id} className="px-6 py-4 flex items-center justify-between">
-                                        <div>
-                                            <div className="font-medium text-gray-900">{a.name}</div>
-                                            <div className="text-sm text-gray-600">
-                                                {formatDate(a.date)}{a.status ? ` • ${a.status}` : ""}
+                        {!items && !error && <div className="px-6 py-6 text-gray-600">Loading…</div>}
+                        {error && <div className="px-6 py-6 text-red-600">{error}</div>}
+
+                        {items && (
+                            <ul className="divide-y">
+                                {items.length === 0 ? (
+                                    <li className="px-6 py-6 text-gray-600">No adventures yet.</li>
+                                ) : (
+                                    items.map((a) => (
+                                        <li key={a.id} className="px-6 py-4 flex items-center justify-between">
+                                            <div>
+                                                <div className="font-medium text-gray-900">{a.name}</div>
+                                                <div className="text-sm text-gray-600">
+                                                    {fmt(a.date)}{a.location ? ` • ${a.location}` : ""}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            <Link to={`/adventures/${a.id}`} className="text-blue-600 text-sm hover:underline">
-                                                Details
-                                            </Link>
-                                            <Link to={`/adventures/${a.id}/edit`} className="text-gray-700 text-sm hover:underline">
-                                                Edit
-                                            </Link>
-                                        </div>
-                                    </li>
-                                ))
-                            )}
-                        </ul>
+                                            <div className="flex items-center gap-4">
+                                                <Link to={`/adventures/${a.id}`} className="text-blue-600 text-sm hover:underline">
+                                                    Details
+                                                </Link>
+                                                <Link to={`/adventures/${a.id}/edit`} className="text-gray-700 text-sm hover:underline">
+                                                    Edit
+                                                </Link>
+                                            </div>
+                                        </li>
+                                    ))
+                                )}
+                            </ul>
+                        )}
                     </div>
 
                     <div className="mt-6">
-                        <Link to="/dashboard" className="text-blue-600 hover:underline">
-                            ← Back to Dashboard
-                        </Link>
+                        <Link to="/dashboard" className="text-blue-600 hover:underline">← Back to Dashboard</Link>
                     </div>
                 </div>
             </section>

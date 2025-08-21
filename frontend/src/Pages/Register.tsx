@@ -1,19 +1,21 @@
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "react-router-dom";
+import type {RegisterPayload} from "../types/RegisterPayload.ts";
+import {createUser, login} from "../helper/auth.ts";
 
-const schema = z
-    .object({
-        name: z.string().min(1, "Name is required"),
-        email: z.string().email("Enter a valid email"),
-        password: z.string().min(8, "At least 8 characters"),
-        confirmPassword: z.string().min(1, "Please confirm your password"),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords must match",
-        path: ["confirmPassword"],
-    })
+const schema = z.object({
+    firstname: z.string().min(1, "Firstname is required"),
+    surname: z.string().min(1, "Surname is required"),
+    username: z.string().min(4, "Username must be at least 4 characters"),
+    email: z.string().email("Enter a valid email"),
+    password: z.string().min(8, "At least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+})
 
 type RegisterFormData = z.infer<typeof schema>
 
@@ -25,9 +27,23 @@ export default function Register() {
         formState: { errors, isSubmitting },
     } = useForm<RegisterFormData>({ resolver: zodResolver(schema) })
 
-    function onSubmit(data: RegisterFormData) {
-        console.log("REGISTER payload:", data)
-        navigate("/dashboard")
+    async function onSubmit(data: RegisterFormData) {
+        const payload: RegisterPayload = {
+            firstname: data.firstname,
+            surname: data.surname,
+            username: data.username,
+            email: data.email,
+            password: data.password,
+        }
+
+        try {
+            await createUser(payload)
+            await login(payload.email, payload.password)
+            navigate("/dashboard")
+        } catch (e) {
+            console.error(e)
+            alert("Registration failed")
+        }
     }
 
     const inputBase =
@@ -44,8 +60,7 @@ export default function Register() {
             </span>
                     </h1>
                     <p className="mt-4 text-lg text-gray-600">
-                        Create your free account and start planning adventures, gear checklists, and training logs
-                        all in one place.
+                        Create your free account and start planning adventures, gear checklists, and training logs all in one place.
                     </p>
                 </div>
 
@@ -54,45 +69,44 @@ export default function Register() {
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="text-sm text-gray-700">Name</label>
-                            <input
-                                {...register("name")}
-                                placeholder="Jane Doe"
-                                className={`${inputBase} mt-1 ${errors.name ? "border-red-500" : "border-gray-300"}`}
-                            />
-                            {errors.name && <p className={errorClass}>{errors.name.message}</p>}
+                            <label className="text-sm text-gray-700">Firstname</label>
+                            <input {...register("firstname")} placeholder="Adam"
+                                   className={`${inputBase} mt-1 ${errors.firstname ? "border-red-500" : "border-gray-300"}`} />
+                            {errors.firstname && <p className={errorClass}>{errors.firstname.message}</p>}
+                        </div>
+
+                        <div>
+                            <label className="text-sm text-gray-700">Surname</label>
+                            <input {...register("surname")} placeholder="Vesely"
+                                   className={`${inputBase} mt-1 ${errors.surname ? "border-red-500" : "border-gray-300"}`} />
+                            {errors.surname && <p className={errorClass}>{errors.surname.message}</p>}
+                        </div>
+
+                        <div>
+                            <label className="text-sm text-gray-700">Username</label>
+                            <input {...register("username")} placeholder="adamos"
+                                   className={`${inputBase} mt-1 ${errors.username ? "border-red-500" : "border-gray-300"}`} />
+                            {errors.username && <p className={errorClass}>{errors.username.message}</p>}
                         </div>
 
                         <div>
                             <label className="text-sm text-gray-700">Email</label>
-                            <input
-                                {...register("email")}
-                                type="email"
-                                placeholder="jane@example.com"
-                                className={`${inputBase} mt-1 ${errors.email ? "border-red-500" : "border-gray-300"}`}
-                            />
+                            <input {...register("email")} type="email" placeholder="adam@example.com"
+                                   className={`${inputBase} mt-1 ${errors.email ? "border-red-500" : "border-gray-300"}`} />
                             {errors.email && <p className={errorClass}>{errors.email.message}</p>}
                         </div>
 
                         <div>
                             <label className="text-sm text-gray-700">Password</label>
-                            <input
-                                {...register("password")}
-                                type="password"
-                                placeholder="••••••••"
-                                className={`${inputBase} mt-1 ${errors.password ? "border-red-500" : "border-gray-300"}`}
-                            />
+                            <input {...register("password")} type="password" placeholder="••••••••"
+                                   className={`${inputBase} mt-1 ${errors.password ? "border-red-500" : "border-gray-300"}`} />
                             {errors.password && <p className={errorClass}>{errors.password.message}</p>}
                         </div>
 
                         <div>
                             <label className="text-sm text-gray-700">Confirm Password</label>
-                            <input
-                                {...register("confirmPassword")}
-                                type="password"
-                                placeholder="••••••••"
-                                className={`${inputBase} mt-1 ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`}
-                            />
+                            <input {...register("confirmPassword")} type="password" placeholder="••••••••"
+                                   className={`${inputBase} mt-1 ${errors.confirmPassword ? "border-red-500" : "border-gray-300"}`} />
                             {errors.confirmPassword && <p className={errorClass}>{errors.confirmPassword.message}</p>}
                         </div>
 
@@ -107,12 +121,10 @@ export default function Register() {
 
                     <p className="mt-4 text-sm text-gray-600 text-center">
                         Already have an account?{" "}
-                        <Link to="/login" className="text-blue-600 hover:underline">
-                            Log in
-                        </Link>
+                        <Link to="/login" className="text-blue-600 hover:underline">Log in</Link>
                     </p>
                 </div>
             </div>
         </main>
-    )
+    );
 }
