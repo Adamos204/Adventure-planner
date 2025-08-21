@@ -1,26 +1,43 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate } from "react-router-dom"
+import {Link, useLocation, useNavigate} from "react-router-dom"
+import {fetchMe, login} from "../helper/auth.ts";
 
 const schema = z.object({
     email: z.string().email("Enter a valid email"),
     password: z.string().min(8, "At least 8 characters"),
 })
-
 type LoginFormData = z.infer<typeof schema>
+
+interface LocationState {
+    from?: {
+        pathname: string
+    }
+}
 
 export default function Login() {
     const navigate = useNavigate()
+    const location = useLocation()
+    const from = (location.state as LocationState)?.from?.pathname || "/dashboard"
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginFormData>({ resolver: zodResolver(schema) })
 
-    function onSubmit(data: LoginFormData) {
-        console.log("LOGIN payload:", data)
-        navigate("/dashboard")
+    async function onSubmit(data: LoginFormData) {
+        try {
+            await login(data.email, data.password)
+            const me = await fetchMe()
+            if (me) {
+                localStorage.setItem("userName", me.firstname)
+            }
+            navigate(from, {replace: true})
+        } catch (err) {
+            console.error(err)
+            alert("Login failed")
+        }
     }
 
     const inputBase =

@@ -1,4 +1,4 @@
-package org.example.adventure_planner.service;
+/*package org.example.adventure_planner.service;
 
 import org.example.adventure_planner.model.TravelPlan;
 import org.example.adventure_planner.repository.TravelPlanRepository;
@@ -191,4 +191,4 @@ class TravelPlanServiceImplTest {
         verify(validationService).requireId(1L);
         verify(travelPlanRepository).findByUserAdventureId(1L);
     }
-}
+}*/

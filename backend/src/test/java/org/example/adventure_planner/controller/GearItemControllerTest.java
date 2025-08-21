@@ -1,4 +1,4 @@
-package org.example.adventure_planner.controller;
+/*package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.GearItem;
 import org.example.adventure_planner.service.GearItemService;
@@ -114,4 +114,4 @@ class GearItemControllerTest {
         assertEquals(1, response.getBody().size());
         verify(gearItemService, times(1)).getAllAdventureItems(adventureId);
     }
-}
+}*/

@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import {useEffect, useState} from "react";
+import type {UserDto} from "../dto/dto.tsx";
+import {fetchMe, logout} from "../helper/auth.ts";
 
 type Training = { id: string; date: string; title: string; duration: string }
 type Adventure = { id: string; date: string; name: string; status?: "Planned" | "Booked" | "Prep" }
-
-const userName = localStorage.getItem("userName") || "Adamos"
 
 const recentTrainings: Training[] = [
     { id: "t1", date: "2025-08-18", title: "Gym – Push Day", duration: "60 min" },
@@ -20,18 +21,43 @@ const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
 
 export default function Dashboard() {
+
+    const [user, setUser] = useState<UserDto | null>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchMe().then(setUser);
+    }, []);
+
+    async function handleLogout() {
+        await logout();
+        localStorage.removeItem("userName");
+        navigate("/");
+    }
+
     return (
         <main className="min-h-[calc(100vh-4rem)] bg-white">
             <section className="border-b">
-                <div className="max-w-7xl mx-auto px-6 py-8">
-                    <h1 className="text-3xl font-extrabold tracking-tight">
-            <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
-              Welcome back, {userName}.
-            </span>
-                    </h1>
-                    <p className="mt-2 text-gray-600">Here’s a quick look at your training and upcoming adventures.</p>
+                <div className="max-w-7xl mx-auto px-6 py-8 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-extrabold tracking-tight">
+                            <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
+                                 Welcome back, {user ? `${user.firstname}!` : "Welcome."}
+                            </span>
+                        </h1>
+                        <p className="mt-2 text-gray-600">
+                            Here’s a quick look at your training and upcoming adventures.
+                        </p>
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow hover:opacity-90 transition"
+                    >
+                        Logout
+                    </button>
                 </div>
             </section>
+
 
             <section>
                 <div className="max-w-7xl mx-auto px-6 py-8 grid gap-8 md:grid-cols-2">

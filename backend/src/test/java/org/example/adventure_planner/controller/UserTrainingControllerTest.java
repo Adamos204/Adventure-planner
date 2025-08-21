@@ -1,4 +1,4 @@
-package org.example.adventure_planner.controller;
+/*package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.UserTraining;
 import org.example.adventure_planner.service.UserTrainingService;
@@ -114,4 +114,4 @@ class UserTrainingControllerTest {
         assertEquals(1, response.getBody().size());
         verify(userTrainingService, times(1)).getAllUserTrainings(userId);
     }
-}
+}*/

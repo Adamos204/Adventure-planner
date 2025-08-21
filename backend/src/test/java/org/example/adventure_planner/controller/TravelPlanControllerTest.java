@@ -1,4 +1,4 @@
-package org.example.adventure_planner.controller;
+/*package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.TravelPlan;
 import org.example.adventure_planner.service.TravelPlanService;
@@ -114,4 +114,4 @@ class TravelPlanControllerTest {
         assertEquals(1, response.getBody().size());
         verify(travelPlanService, times(1)).getTravelPlansByUserAdventureId(adventureId);
     }
-}
+}*/

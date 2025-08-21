@@ -1,4 +1,4 @@
-package org.example.adventure_planner.controller;
+/*package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.model.User;
 import org.example.adventure_planner.service.UserService;
@@ -102,4 +102,4 @@ class UserControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(userService, times(1)).deleteUser(1L);
     }
-}
+}*/

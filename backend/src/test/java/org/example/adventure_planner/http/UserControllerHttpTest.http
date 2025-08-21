@@ -15,11 +15,11 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "username": "passwdtest",
-  "firstname": "BIGTEST",
-  "surname": "passwdtest",
-  "email": "passwdtest@example.com",
-  "password": "asdasd"
+  "username": "Adamost",
+  "firstname": "Adamos",
+  "surname": "Vesely",
+  "email": "test@email.com",
+  "password": "password"
 }
 
 ###

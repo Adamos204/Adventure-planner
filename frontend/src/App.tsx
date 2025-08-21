@@ -11,6 +11,7 @@ import TrainingDetails from "./Pages/TrainingDetails"
 import AdventureDetails from "./Pages/AdventureDetails"
 import TrainingsList from "./Pages/TrainingsList.tsx";
 import AdventuresList from "./Pages/AdventuresList.tsx";
+import RequireAuth from "./components/RequireAuth.tsx";
 
 function App() {
     return (
@@ -18,17 +19,21 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={<About />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/training/new" element={<TrainingForm />} />
-                <Route path="/training/:id/edit" element={<TrainingForm />} />
-                <Route path="/training/:id" element={<TrainingDetails />} />
-                <Route path="/adventures/new" element={<AdventureForm />} />
-                <Route path="/adventures/:id/edit" element={<AdventureForm />} />
-                <Route path="/adventures/:id" element={<AdventureDetails />} />
-                <Route path="/training" element={<TrainingsList />} />
-                <Route path="/adventures" element={<AdventuresList />} />
+
+                <Route element={<RequireAuth />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/training" element={<TrainingsList />} />
+                    <Route path="/training/new" element={<TrainingForm />} />
+                    <Route path="/training/:id" element={<TrainingDetails />} />
+                    <Route path="/training/:id/edit" element={<TrainingForm />} />
+                    <Route path="/adventures" element={<AdventuresList />} />
+                    <Route path="/adventures/new" element={<AdventureForm />} />
+                    <Route path="/adventures/:id" element={<AdventureDetails />} />
+                    <Route path="/adventures/:id/edit" element={<AdventureForm />} />
+                </Route>
+
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </>

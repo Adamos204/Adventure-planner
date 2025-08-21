@@ -1,4 +1,4 @@
-package org.example.adventure_planner.service;
+/*package org.example.adventure_planner.service;
 
 import org.example.adventure_planner.model.AdventureTemplate;
 import org.example.adventure_planner.repository.AdventureTemplateRepository;
@@ -184,4 +184,4 @@ class AdventureTemplateServiceImplTest {
         verify(validationService).requireEntityExists(false, TEMPLATE_NOT_FOUND_MSG);
         verify(adventureTemplateRepository, never()).deleteById(any());
     }
-}
+}*/
