@@ -22,6 +22,7 @@ export default function Navbar() {
                         <NavLink to="/dashboard" className={linkClass}>Dashboard</NavLink>
                         <NavLink to="/login" className={linkClass}>Login</NavLink>
                         <NavLink to="/register" className={linkClass}>Register</NavLink>
+                        <NavLink to="/templates" className={linkClass}>Templates</NavLink>
                     </div>
                 </div>
             </div>

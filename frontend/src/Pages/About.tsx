@@ -67,6 +67,23 @@ export default function About() {
                     </div>
                 </div>
             </section>
+            <section className="min-h-[60vh] flex items-center justify-center border-t">
+                <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 px-6">
+                    <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-center md:text-left">
+                        <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
+                            Ready to prep your first summit?
+                        </span>
+                    </h2>
+                    <div className="flex gap-4">
+                        <Link to={"/register"} className="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium shadow hover:opacity-90 transition">
+                            Get started
+                        </Link>
+                        <Link to={"/dashboard"} className="px-6 py-3 rounded-xl border border-gray-300 font-medium hover:bg-gray-50 transition">
+                            View dashboard
+                        </Link>
+                    </div>
+                </div>
+            </section>
             <section className="bg-gray-50 border-t">
                 <div className="max-w-7xl mx-auto px-6 py-12">
                     <h2 className="text-2xl font-semibold text-gray-900">Designer</h2>
@@ -119,7 +136,7 @@ export default function About() {
                             <span className="text-gray-700">Export to PDF/Excel</span>
                         </li>
                         <li className="flex items-start gap-3">
-                            <span className="h-6 w-6 flex items-center justify-center rounded-full bg-blue-600 text-white text-sm">•</span>
+                            <span className="h-6 w-6 flex items-center justify-center rounded-full bg-blue-600 text-white text-sm">✓</span>
                             <span className="text-gray-700">Personal dashboard with stats</span>
                         </li>
                         <li className="flex items-start gap-3">
@@ -127,27 +144,6 @@ export default function About() {
                             <span className="text-gray-700">Pre-made adventure templates</span>
                         </li>
                     </ul>
-                </div>
-            </section>
-            <section className="border-t">
-                <div className="max-w-7xl mx-auto px-6 py-10">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <h3 className="text-xl font-semibold text-gray-900">Ready to prep your next summit?</h3>
-                        <div className="flex gap-3">
-                            <Link
-                                to="/register"
-                                className="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-white font-medium shadow hover:opacity-90 transition"
-                            >
-                                Get started
-                            </Link>
-                            <Link
-                                to="/dashboard"
-                                className="inline-flex items-center rounded-xl border px-4 py-2 text-gray-800 hover:bg-gray-50 transition"
-                            >
-                                View dashboard
-                            </Link>
-                        </div>
-                    </div>
                 </div>
             </section>
         </main>

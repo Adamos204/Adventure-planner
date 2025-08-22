@@ -2,29 +2,32 @@ import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useParams, Link } from "react-router-dom"
+import {useNavigate, useParams, Link, useLocation} from "react-router-dom"
 import { createAdventure, getAdventure, updateAdventure } from "../components/AdventuresFecth.tsx";
 import type { CreateAdventurePayload, Adventure } from "../types/AdventureTypes.ts";
+import type {AdventureTemplate} from "../types/TemplateTypes.ts";
 
 const schema = z.object({
-    name: z.string().min(5).max(30),
-    location: z.string().min(3).max(20),
-    description: z.string().min(20).max(300),
+    name: z.string().min(3).max(255),
+    location: z.string().min(3).max(255),
+    description: z.string().min(20).max(1000),
     date: z.string().min(1),
-    notes: z.string().max(500).optional(),
+    notes: z.string().max(1000).optional(),
     lengthInDays: z.coerce.number().int().min(0),
     lengthInKm: z.coerce.number().min(0),
-    startLocation: z.string().min(10).max(50),
-    endLocation: z.string().min(10).max(50),
-})
+    startLocation: z.string().min(2).max(100),
+    endLocation: z.string().min(2).max(100),
+});
 
 type AdventureFormData = z.infer<typeof schema>
 
 export default function AdventureForm() {
-    const navigate = useNavigate()
-    const { id } = useParams()
-    const isEdit = Boolean(id)
-    const [loading, setLoading] = useState(isEdit)
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const isEdit = Boolean(id);
+    const [loading, setLoading] = useState(isEdit);
+    const location = useLocation() as { state?: { template?: AdventureTemplate } }
+    const template = location.state?.template;
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
         useForm<AdventureFormData>({
@@ -32,28 +35,50 @@ export default function AdventureForm() {
         })
 
     useEffect(() => {
-        if (!isEdit || !id) return
-        getAdventure(id)
-            .then((a: Adventure) => {
-                const d = new Date(a.date)
-                const yyyy = d.getFullYear()
-                const mm = String(d.getMonth() + 1).padStart(2, "0")
-                const dd = String(d.getDate()).padStart(2, "0")
+        if (isEdit && id) {
+            getAdventure(id)
+                .then((a: Adventure) => {
+                    const d = new Date(a.date)
+                    const yyyy = d.getFullYear()
+                    const mm = String(d.getMonth() + 1).padStart(2, "0")
+                    const dd = String(d.getDate()).padStart(2, "0")
 
-                reset({
-                    name: a.name,
-                    location: a.location ?? "",
-                    description: a.description ?? "",
-                    date: `${yyyy}-${mm}-${dd}`,
-                    notes: a.notes ?? "",
-                    lengthInDays: a.lengthInDays,
-                    lengthInKm: a.lengthInKm,
-                    startLocation: a.startLocation ?? "",
-                    endLocation: a.endLocation ?? "",
+                    reset({
+                        name: a.name,
+                        location: a.location ?? "",
+                        description: a.description ?? "",
+                        date: `${yyyy}-${mm}-${dd}`,
+                        notes: a.notes ?? "",
+                        lengthInDays: a.lengthInDays,
+                        lengthInKm: a.lengthInKm,
+                        startLocation: a.startLocation ?? "",
+                        endLocation: a.endLocation ?? "",
+                    })
                 })
+                .finally(() => setLoading(false))
+            return
+        }
+        if (!isEdit && template) {
+            const today = new Date()
+            const yyyy = today.getFullYear()
+            const mm = String(today.getMonth() + 1).padStart(2, "0")
+            const dd = String(today.getDate()).padStart(2, "0")
+
+            reset({
+                name: template.name,
+                location: template.location,
+                description: template.description,
+                date: `${yyyy}-${mm}-${dd}`,
+                notes: "",
+                lengthInDays: template.lengthInDays,
+                lengthInKm: template.lengthInKm,
+                startLocation: template.startLocation,
+                endLocation: template.endLocation,
             })
-            .finally(() => setLoading(false))
-    }, [id, isEdit, reset])
+            setLoading(false)
+        }
+    }, [id, isEdit, template, reset])
+
 
 
     async function onSubmit(values: AdventureFormData) {
@@ -144,7 +169,24 @@ export default function AdventureForm() {
                         {errors.endLocation && <p className={err}>{errors.endLocation.message}</p>}
                     </div>
                 </div>
-
+                {!isEdit && template && (
+                    <div className="rounded-lg bg-blue-50 text-blue-800 text-sm p-3">
+                        Template applied: <strong>{template.name}</strong>
+                    </div>
+                )}
+                {!isEdit && template && (
+                    <button
+                        type="button"
+                        onClick={() => reset({
+                            name: "", location: "", description: "",
+                            date: "", notes: "", lengthInDays: 0, lengthInKm: 0,
+                            startLocation: "", endLocation: "",
+                        })}
+                        className="w-full rounded-xl border px-4 py-2 text-gray-800 hover:bg-gray-50 transition"
+                    >
+                        Clear template
+                    </button>
+                )}
                 <button
                     type="submit"
                     disabled={isSubmitting}

@@ -1,9 +1,9 @@
 import type {CreateAdventurePayload, UpdateAdventurePayload} from "../types/AdventureTypes.ts";
 
-const BASE = "http://localhost:8080"
+const BASE = "http://localhost:8080/user-adventure"
 
 export async function listAdventures(id: string | number | undefined) {
-    const res = await fetch(`${BASE}/user-adventure/user/${id}`, { credentials: "include" });
+    const res = await fetch(`${BASE}/user/${id}`, { credentials: "include" });
     if (!res.ok){
         throw new Error("Failed to load adventures");
     }
@@ -11,13 +11,13 @@ export async function listAdventures(id: string | number | undefined) {
 }
 
 export async function getAdventure(id: string | undefined){
-    const res = await fetch(`${BASE}/user-adventure/${id}`, { credentials: "include" })
+    const res = await fetch(`${BASE}/${id}`, { credentials: "include" })
     if (!res.ok) throw new Error("Adventure not found")
     return res.json()
 }
 
 export async function createAdventure(payload: CreateAdventurePayload) {
-    const res = await fetch(`${BASE}/user-adventure`, {
+    const res = await fetch(`${BASE}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -28,7 +28,7 @@ export async function createAdventure(payload: CreateAdventurePayload) {
 }
 
 export async function updateAdventure(id: string | undefined, payload: UpdateAdventurePayload){
-    const res = await fetch(`${BASE}/user-adventure/${id}`, {
+    const res = await fetch(`${BASE}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -39,7 +39,7 @@ export async function updateAdventure(id: string | undefined, payload: UpdateAdv
 }
 
 export async function deleteAdventure(id: string | undefined){
-    const res = await fetch(`${BASE}/user-adventure/${id}`, {
+    const res = await fetch(`${BASE}/${id}`, {
         method: "DELETE",
         credentials: "include",
     })
