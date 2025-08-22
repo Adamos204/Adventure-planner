@@ -15,6 +15,8 @@ import RequireAuth from "./components/RequireAuth.tsx";
 import Templates from "./Pages/Templates.tsx";
 import GearForm from "./Pages/GearForm.tsx";
 import GearList from "./Pages/GearList.tsx";
+import TravelPlanList from "./Pages/TravelPlanList.tsx";
+import TravelPlanForm from "./Pages/TravelPlanForm.tsx";
 
 function App() {
     return (
@@ -42,6 +44,11 @@ function App() {
                     <Route path="/adventures/:adventureId/gear" element={<GearList />} />
                     <Route path="/adventures/:adventureId/gear/new" element={<GearForm />} />
                     <Route path="/adventures/:adventureId/gear/:gearId/edit" element={<GearForm />} />
+
+                    <Route path="/adventures/:adventureId/travel" element={<TravelPlanList />} />
+                    <Route path="/adventures/:adventureId/travel/new" element={<TravelPlanForm />} />
+                    <Route path="/adventures/:adventureId/travel/:planId/edit" element={<TravelPlanForm />} />
+
 
                 </Route>
 

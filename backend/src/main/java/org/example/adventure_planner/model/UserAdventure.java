@@ -16,8 +16,8 @@ public class UserAdventure {
     private Long id;
 
     @NotBlank
-    @Size(min = 5, max = 30)
-    @Column(nullable = false, length = 30)
+    @Size(min = 5, max = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
     @NotBlank

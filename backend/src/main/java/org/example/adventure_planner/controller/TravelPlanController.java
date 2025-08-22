@@ -28,8 +28,12 @@ public class TravelPlanController {
         return ResponseEntity.ok(travelPlanService.getTravelPlanById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<TravelPlanResponseDTO> addTravelPlan(@RequestBody TravelPlanRequestDTO dto) {
+    @PostMapping("/adventure/{adventureId}")
+    public ResponseEntity<TravelPlanResponseDTO> addForAdventure(
+            @PathVariable Long adventureId,
+            @RequestBody TravelPlanRequestDTO dto
+    ) {
+        dto.setUserAdventureId(adventureId);
         return ResponseEntity.ok(travelPlanService.addTravelPlan(dto));
     }
 

@@ -17,7 +17,7 @@ public class TravelPlan {
 
     @NotBlank
     @Size(min = 3, max = 50)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String type;
 
     @NotBlank

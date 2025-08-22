@@ -5,6 +5,8 @@ import type { Adventure } from "../types/AdventureTypes.ts";
 import {listGear} from "../components/GearsFetch.tsx";
 import type {GearItem} from "../types/GearTypes.ts";
 import {useCurrentUserId} from "../helper/UseCurrentUserId.ts";
+import {listTravelPlans} from "../components/TravelPlanFetch.tsx";
+import type {TravelPlan} from "../types/TravelPlanTypes.ts";
 
 const fmt = (iso: string) =>
     new Date(iso).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
@@ -17,6 +19,7 @@ export default function AdventureDetails() {
     const [deleted, setDeleted] = useState(false);
     const [gear, setGear] = useState<GearItem[] | null>(null)
     const { userId } = useCurrentUserId();
+    const [plans, setPlans] = useState<TravelPlan[] | null>(null)
 
     useEffect(() => {
         if (!id) return
@@ -28,6 +31,7 @@ export default function AdventureDetails() {
     useEffect(() => {
         if (!id) return
         listGear(id).then((g) => setGear(g)).catch(() => setGear([]))
+        listTravelPlans(id).then(setPlans).catch(() => setPlans([]))
     }, [id])
 
     async function handleDelete() {
@@ -103,6 +107,31 @@ export default function AdventureDetails() {
                                     <div className="font-medium text-gray-900">{g.name}</div>
                                 </div>
                                 <div className="text-sm text-gray-600">Qty: {g.quantity}</div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+            <div className="rounded-2xl border bg-white shadow-sm mt-6">
+                <div className="flex items-center justify-between px-6 py-4 border-b">
+                    <div className="text-lg font-semibold text-gray-900">Travel Plans (top 3)</div>
+                    <div className="flex gap-3">
+                        <Link to={`/adventures/${id}/travel`} className="rounded-xl border px-3 py-1.5 text-sm hover:bg-gray-50">View all</Link>
+                        <Link to={`/adventures/${id}/travel/new`} className="rounded-xl bg-blue-600 px-3 py-1.5 text-white text-sm shadow hover:opacity-90">Add plan</Link>
+                    </div>
+                </div>
+
+                {!plans && <div className="px-6 py-6 text-gray-600">Loading…</div>}
+                {plans && plans.length === 0 && <div className="px-6 py-6 text-gray-600">No plans yet.</div>}
+
+                {plans && plans.length > 0 && (
+                    <ul className="divide-y">
+                        {plans.slice(0, 3).map((p) => (
+                            <li key={p.id} className="px-6 py-3 flex items-center justify-between">
+                                <div className="font-medium text-gray-900">{p.type}</div>
+                                <div className="text-sm text-gray-600">
+                                    {p.departureLocation} ({p.departureTime.slice(0,5)}) → {p.arrivalLocation} ({p.arrivalTime.slice(0,5)})
+                                </div>
                             </li>
                         ))}
                     </ul>
