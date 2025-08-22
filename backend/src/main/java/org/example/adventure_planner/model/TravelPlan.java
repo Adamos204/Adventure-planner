@@ -16,18 +16,18 @@ public class TravelPlan {
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 20)
+    @Size(min = 3, max = 50)
     @Column(nullable = false, length = 20)
     private String type;
 
     @NotBlank
-    @Size(min = 2, max = 50)
-    @Column(nullable = false, length = 50)
+    @Size(min = 2, max = 255)
+    @Column(nullable = false)
     private String departureLocation;
 
     @NotBlank
-    @Size(min = 2, max = 50)
-    @Column(nullable = false, length = 50)
+    @Size(min = 2, max = 255)
+    @Column(nullable = false)
     private String arrivalLocation;
 
     @NotNull
@@ -38,8 +38,8 @@ public class TravelPlan {
     @Column(name = "arrival_time", nullable = false)
     private Time arrivalTime;
 
-    @Size(max = 200)
-    @Column(length = 200)
+    @Size(max = 1000)
+    @Column(length = 1000)
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)

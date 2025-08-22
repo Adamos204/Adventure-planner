@@ -67,20 +67,36 @@ export default function About() {
                     </div>
                 </div>
             </section>
-            <section className="min-h-[60vh] flex items-center justify-center border-t">
-                <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 px-6">
-                    <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-center md:text-left">
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
-                            Ready to prep your first summit?
-                        </span>
-                    </h2>
-                    <div className="flex gap-4">
-                        <Link to={"/register"} className="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium shadow hover:opacity-90 transition">
-                            Get started
-                        </Link>
-                        <Link to={"/dashboard"} className="px-6 py-3 rounded-xl border border-gray-300 font-medium hover:bg-gray-50 transition">
-                            View dashboard
-                        </Link>
+            <section className="border-t bg-gradient-to-b from-white to-gray-50">
+                <div className="max-w-7xl mx-auto px-6 py-10">
+                    <div className="rounded-2xl border bg-white/70 backdrop-blur-sm shadow-sm">
+                        <div className="grid gap-6 md:grid-cols-[1fr_auto] items-center px-6 py-8 md:px-10">
+                            <div>
+                                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+            <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
+              Ready to prep your first summit?
+            </span>
+                                </h2>
+                                <p className="mt-2 text-gray-600">
+                                    Create your account, then plan a route, pack your gear list, and start logging training.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3 justify-start md:justify-end">
+                                <Link
+                                    to="/register"
+                                    className="inline-flex items-center whitespace-nowrap rounded-xl bg-blue-600 px-4 py-2 text-white font-medium shadow hover:opacity-90 transition"
+                                >
+                                    Create an account
+                                </Link>
+                                <Link
+                                    to="/dashboard"
+                                    className="inline-flex items-center whitespace-nowrap rounded-xl border px-4 py-2 text-gray-800 hover:bg-gray-50 transition"
+                                >
+                                    Go to dashboard
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

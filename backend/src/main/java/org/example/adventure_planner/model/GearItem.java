@@ -27,6 +27,9 @@ public class GearItem {
     @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = false)
+    private boolean packed = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adventure_id", nullable = false)
     private UserAdventure adventure;

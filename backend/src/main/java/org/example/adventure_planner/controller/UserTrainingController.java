@@ -2,9 +2,13 @@ package org.example.adventure_planner.controller;
 
 import org.example.adventure_planner.dto.UserTrainingRequestDTO;
 import org.example.adventure_planner.dto.UserTrainingResponseDTO;
+import org.example.adventure_planner.exception.ResourceNotFoundException;
+import org.example.adventure_planner.model.User;
+import org.example.adventure_planner.repository.UserRepository;
 import org.example.adventure_planner.service.UserTrainingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +18,11 @@ import java.util.List;
 public class UserTrainingController {
 
     private final UserTrainingService userTrainingService;
+    private final UserRepository userRepository;
 
-    public UserTrainingController(UserTrainingService userTrainingService) {
+    public UserTrainingController(UserTrainingService userTrainingService, UserRepository userRepository) {
         this.userTrainingService = userTrainingService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -32,7 +38,10 @@ public class UserTrainingController {
     }
 
     @PostMapping
-    public ResponseEntity<UserTrainingResponseDTO> addTraining(@RequestBody UserTrainingRequestDTO dto) {
+    public ResponseEntity<UserTrainingResponseDTO> addTraining(@RequestBody UserTrainingRequestDTO dto, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        dto.setUserId(user.getId());
         UserTrainingResponseDTO saved = userTrainingService.addTraining(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
@@ -40,7 +49,11 @@ public class UserTrainingController {
     @PutMapping("/{id}")
     public ResponseEntity<UserTrainingResponseDTO> updateTraining(
             @PathVariable Long id,
-            @RequestBody UserTrainingRequestDTO dto) {
+            @RequestBody UserTrainingRequestDTO dto,
+            Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        dto.setUserId(user.getId());
         UserTrainingResponseDTO updated = userTrainingService.updateTraining(id, dto);
         return ResponseEntity.ok(updated);
     }

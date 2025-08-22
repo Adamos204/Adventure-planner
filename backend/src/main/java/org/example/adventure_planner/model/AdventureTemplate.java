@@ -14,17 +14,17 @@ public class AdventureTemplate {
     private Long id;
 
     @NotBlank
-    @Size(min = 5, max = 30)
-    @Column(nullable = false, unique = true, length = 30)
+    @Size(min = 5, max = 255)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @NotBlank
-    @Size(min = 5, max = 20)
-    @Column(nullable = false, length = 20)
+    @Size(min = 5, max = 255)
+    @Column(nullable = false)
     private String location;
 
     @NotBlank
-    @Size(min = 50, max = 200)
+    @Size(min = 50, max = 1000)
     @Column(nullable = false, length = 200)
     private String description;
 
@@ -39,12 +39,12 @@ public class AdventureTemplate {
     private int lengthInKm;
 
     @NotBlank
-    @Size(min = 10, max = 50)
+    @Size(min = 10, max = 100)
     @Column(nullable = false, length = 50, name = "start_location")
     private String startLocation;
 
     @NotBlank
-    @Size(min = 10, max = 50)
+    @Size(min = 10, max = 100)
     @Column(nullable = false, length = 50, name = "end_location")
     private String endLocation;
 

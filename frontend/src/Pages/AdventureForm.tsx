@@ -6,6 +6,7 @@ import {useNavigate, useParams, Link, useLocation} from "react-router-dom"
 import { createAdventure, getAdventure, updateAdventure } from "../components/AdventuresFecth.tsx";
 import type { CreateAdventurePayload, Adventure } from "../types/AdventureTypes.ts";
 import type {AdventureTemplate} from "../types/TemplateTypes.ts";
+import {useCurrentUserId} from "../helper/UseCurrentUserId.ts";
 
 const schema = z.object({
     name: z.string().min(3).max(255),
@@ -28,6 +29,7 @@ export default function AdventureForm() {
     const [loading, setLoading] = useState(isEdit);
     const location = useLocation() as { state?: { template?: AdventureTemplate } }
     const template = location.state?.template;
+    const { userId } = useCurrentUserId();
 
     const { register, handleSubmit, reset, formState: { errors, isSubmitting } } =
         useForm<AdventureFormData>({
@@ -99,7 +101,7 @@ export default function AdventureForm() {
         } else {
             await createAdventure(payload)
         }
-        navigate("/dashboard")
+        navigate(`/adventures/user/${userId}`)
     }
 
 
@@ -196,7 +198,7 @@ export default function AdventureForm() {
                 </button>
             </form>
 
-            <Link to="/dashboard" className="block text-center mt-4 text-blue-600 hover:underline">← Back to list</Link>
+            <Link to={`/adventures/user/${userId}`} className="block text-center mt-4 text-blue-600 hover:underline">← Back to list</Link>
         </div>
     )
 }

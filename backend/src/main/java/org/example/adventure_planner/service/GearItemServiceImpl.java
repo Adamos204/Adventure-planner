@@ -33,6 +33,7 @@ public class GearItemServiceImpl implements GearItemService {
         dto.setId(item.getId());
         dto.setName(item.getName());
         dto.setQuantity(item.getQuantity());
+        dto.setPacked(item.isPacked());
         dto.setAdventureId(item.getAdventure() != null ? item.getAdventure().getId() : null);
         return dto;
     }
@@ -40,6 +41,7 @@ public class GearItemServiceImpl implements GearItemService {
     private void mapRequestToEntity(GearItemRequestDTO dto, GearItem item) {
         item.setName(dto.getName());
         item.setQuantity(dto.getQuantity());
+        item.setPacked(dto.isPacked());
 
         if (dto.getAdventureId() != null) {
             UserAdventure adventure = new UserAdventure();

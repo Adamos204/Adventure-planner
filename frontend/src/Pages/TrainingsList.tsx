@@ -44,7 +44,7 @@ export default function TrainingsList() {
                     <div className="rounded-2xl border bg-white shadow-sm">
                         <div className="flex items-center justify-between px-6 py-4 border-b">
                             <div className="text-lg font-semibold text-gray-900">Trainings</div>
-                            <Link to="/training/new" className="inline-flex items-center rounded-xl bg-blue-600 px-3 py-1.5 text-white text-sm font-medium shadow hover:opacity-90 transition">
+                            <Link to="/trainings/new" className="inline-flex items-center rounded-xl bg-blue-600 px-3 py-1.5 text-white text-sm font-medium shadow hover:opacity-90 transition">
                                 Add
                             </Link>
                         </div>
@@ -64,8 +64,8 @@ export default function TrainingsList() {
                                                 <div className="text-sm text-gray-600">{fmt(t.date)} • {t.durationInMin} min • {t.durationInKm} km</div>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <Link to={`/training/${t.id}`} className="text-blue-600 text-sm hover:underline">Details</Link>
-                                                <Link to={`/training/${t.id}/edit`} className="text-gray-700 text-sm hover:underline">Edit</Link>
+                                                <Link to={`/trainings/${t.id}`} className="text-blue-600 text-sm hover:underline">Details</Link>
+                                                <Link to={`/trainings/${t.id}/edit`} className="text-gray-700 text-sm hover:underline">Edit</Link>
                                             </div>
                                         </li>
                                     ))

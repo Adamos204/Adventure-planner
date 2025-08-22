@@ -89,7 +89,7 @@ export default function Login() {
                             disabled={isSubmitting}
                             className="w-full rounded-xl bg-blue-600 px-4 py-2 text-white font-medium shadow hover:opacity-90 transition disabled:opacity-60"
                         >
-                            Sign in
+                            Log in
                         </button>
                     </form>
 

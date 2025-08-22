@@ -13,6 +13,8 @@ import TrainingsList from "./Pages/TrainingsList.tsx";
 import AdventuresList from "./Pages/AdventuresList.tsx";
 import RequireAuth from "./components/RequireAuth.tsx";
 import Templates from "./Pages/Templates.tsx";
+import GearForm from "./Pages/GearForm.tsx";
+import GearList from "./Pages/GearList.tsx";
 
 function App() {
     return (
@@ -25,15 +27,22 @@ function App() {
 
                 <Route element={<RequireAuth />}>
                     <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/trainings/user/:id" element={<TrainingsList />} />
-                    <Route path="/training/new" element={<TrainingForm />} />
-                    <Route path="/training/:id" element={<TrainingDetails />} />
-                    <Route path="/training/:id/edit" element={<TrainingForm />} />
+                    <Route path="/templates" element={<Templates/>}/>
+
+                    <Route path="/trainings" element={<TrainingsList />} />
+                    <Route path="/trainings/new" element={<TrainingForm />} />
+                    <Route path="/trainings/:id" element={<TrainingDetails />} />
+                    <Route path="/trainings/:id/edit" element={<TrainingForm />} />
+
                     <Route path="/adventures/user/:id" element={<AdventuresList />} />
                     <Route path="/adventures/new" element={<AdventureForm />} />
                     <Route path="/adventures/:id" element={<AdventureDetails />} />
                     <Route path="/adventures/:id/edit" element={<AdventureForm />} />
-                    <Route path="/templates" element={<Templates/>}/>
+
+                    <Route path="/adventures/:adventureId/gear" element={<GearList />} />
+                    <Route path="/adventures/:adventureId/gear/new" element={<GearForm />} />
+                    <Route path="/adventures/:adventureId/gear/:gearId/edit" element={<GearForm />} />
+
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

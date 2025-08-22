@@ -6,5 +6,6 @@ import lombok.Data;
 public class GearItemRequestDTO {
     private String name;
     private int quantity;
+    private boolean packed;
     private Long adventureId;
 }

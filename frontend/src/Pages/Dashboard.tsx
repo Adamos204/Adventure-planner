@@ -78,9 +78,9 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between px-6 py-4 border-b">
                             <h2 className="text-lg font-semibold text-gray-900">Recent Trainings</h2>
                             <div className="flex items-center gap-3">
-                                <Link to={`/trainings/user/${user?.id}`} className="text-sm text-gray-700 hover:underline">View all</Link>
+                                <Link to="/trainings" className="text-sm text-gray-700 hover:underline">View all</Link>
                                 <Link
-                                    to="/training/new"
+                                    to="/trainings/new"
                                     className="inline-flex items-center rounded-xl bg-blue-600 px-3 py-1.5 text-white text-sm font-medium shadow hover:opacity-90 transition"
                                 >
                                     Add
@@ -96,7 +96,7 @@ export default function Dashboard() {
                                         <div className="font-medium text-gray-900">{t.type}</div>
                                         <div className="text-sm text-gray-600">{fmt(t.date)} • {t.durationInMin} min{t.durationInKm ? ` • ${t.durationInKm} km` : ""}</div>
                                     </div>
-                                    <Link to={`/training/${t.id}`} className="text-blue-600 text-sm hover:underline">Details</Link>
+                                    <Link to={`/trainings/${t.id}`} className="text-blue-600 text-sm hover:underline">Details</Link>
                                 </li>
                             ))}
                         </ul>

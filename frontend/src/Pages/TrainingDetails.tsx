@@ -28,7 +28,7 @@ export default function TrainingDetails() {
         try {
             setDeleted(true);
             await deleteTraining(id);
-            navigate(`/trainings/user/${id}`)
+            navigate(`/trainings/`)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
             alert("Failed to delete training");
@@ -53,10 +53,9 @@ export default function TrainingDetails() {
             {item.notes && <p className="text-gray-700">Notes: {item.notes}</p>}
 
             <div className="flex gap-4">
-                <Link to={`/training/${item.id}/edit`} className="text-blue-600 hover:underline">Edit</Link>
-                <Link to="/training" className="text-blue-600 hover:underline">← Back to list</Link>
-                <button onClick={handleDelete} disabled={deleted} className="rounded-full bg-red-500 text-white px-3 py-1.5 shadow hover:bg-red-600 disabled:opacity-60"
-                >
+                <Link to={`/trainings/${item.id}/edit`} className="text-blue-600 hover:underline">Edit</Link>
+                <Link to="/trainings" className="text-blue-600 hover:underline">← Back to list</Link>
+                <button onClick={handleDelete} disabled={deleted} className="rounded-full bg-red-500 text-white px-3 py-1.5 shadow hover:bg-red-600 disabled:opacity-60">
                     Delete
                 </button>
             </div>
