@@ -156,7 +156,7 @@ export default function About() {
                             <span className="text-gray-700">Personal dashboard with stats</span>
                         </li>
                         <li className="flex items-start gap-3">
-                            <span className="h-6 w-6 flex items-center justify-center rounded-full bg-blue-600 text-white text-sm">•</span>
+                            <span className="h-6 w-6 flex items-center justify-center rounded-full bg-blue-600 text-white text-sm">✓</span>
                             <span className="text-gray-700">Pre-made adventure templates</span>
                         </li>
                     </ul>

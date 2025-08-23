@@ -3,8 +3,12 @@ package org.example.adventure_planner.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -47,16 +51,26 @@ public class UserAdventure {
     private Double lengthInKm;
 
     @NotBlank
-    @Size(min = 10, max = 50)
+    @Size(min = 3, max = 50)
     @Column(nullable = false, length = 50, name = "start_location")
     private String startLocation;
 
     @NotBlank
-    @Size(min = 10, max = 50)
+    @Size(min = 3, max = 50)
     @Column(nullable = false, length = 50, name = "end_location")
     private String endLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "userAdventure", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<TravelPlan> travelPlans = new ArrayList<>();
+
+    @OneToMany(mappedBy = "adventure", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<GearItem> gearItems = new ArrayList<>();
 }

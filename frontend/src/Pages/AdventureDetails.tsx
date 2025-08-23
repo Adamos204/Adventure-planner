@@ -38,7 +38,7 @@ export default function AdventureDetails() {
         if (!id){
             return;
         }
-        if (!confirm("Delete this training session?")){
+        if (!confirm("Delete this adventure?")){
             return;
         }
         try {
@@ -47,7 +47,7 @@ export default function AdventureDetails() {
             navigate(`/adventures/user/${userId}`)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-            alert("Failed to delete training");
+            alert("Failed to delete adventure");
             setDeleted(false)
         }
     }

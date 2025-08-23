@@ -1,4 +1,4 @@
-import type { Training, CreateTrainingPayload, UpdateTrainingPayload } from "../types/TrainingTypes"
+import type {CreateTrainingPayload, UpdateTrainingPayload } from "../types/TrainingTypes"
 
 const BASE = "http://localhost:8080/user-trainings"
 
@@ -8,13 +8,13 @@ export async function listTrainings(id: string | number | undefined) {
     return res.json()
 }
 
-export async function getTraining(id: string | number): Promise<Training> {
+export async function getTraining(id: string | number){
     const res = await fetch(`${BASE}/${id}`, { credentials: "include" })
     if (!res.ok) throw new Error("Training not found")
     return res.json()
 }
 
-export async function createTraining(payload: CreateTrainingPayload): Promise<Training> {
+export async function createTraining(payload: CreateTrainingPayload){
     const res = await fetch(BASE, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,7 +25,7 @@ export async function createTraining(payload: CreateTrainingPayload): Promise<Tr
     return res.json()
 }
 
-export async function updateTraining(id: string | number, payload: UpdateTrainingPayload): Promise<Training> {
+export async function updateTraining(id: string | number, payload: UpdateTrainingPayload){
     const res = await fetch(`${BASE}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -36,7 +36,7 @@ export async function updateTraining(id: string | number, payload: UpdateTrainin
     return res.json()
 }
 
-export async function deleteTraining(id: string | number): Promise<void> {
+export async function deleteTraining(id: string | number){
     const res = await fetch(`${BASE}/${id}`, { method: "DELETE", credentials: "include" })
     if (!res.ok) throw new Error("Failed to delete training")
 }
